@@ -123,7 +123,7 @@ class Deploy(BaseTask):
         self.ensure_virtualenv()
         # dependency management
 
-        put(env.local_path('requirements', env.remote_path(), use_sudo=True))
+        put(env.local_path('requirements'), env.remote_path(), use_sudo=True)
         self.update_packages(pip_filename=env.requirements_file)
 
     def create_project_directories(self):
