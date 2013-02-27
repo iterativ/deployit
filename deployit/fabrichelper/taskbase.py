@@ -64,7 +64,7 @@ class BaseTask(Task):
         except Exception, e:
             print 'EXCEPTION: Could not load site: %s' % (e)
             
-    def update_packages(self, pip_filename='req.pip'):
+    def update_packages(self, pip_filename='requirements.txt'):
         self.adjust_rights('root')
         self.virtualenv('pip install --upgrade pip pyinotify')
         self.virtualenv('pip install -r %s/%s --upgrade' % (env.remote_app_path, pip_filename)) 
@@ -122,21 +122,9 @@ class Deploy(BaseTask):
     def initialize_virtualenv(self):
         self.ensure_virtualenv()
         # dependency management
-        env_pip = env.env_path('env.pip')
-        if os.path.exists(env_pip):
-            put(env_pip, env.remote_path(), use_sudo=True)
-            if self.__class__.update_libs:
-                self.update_packages('env.pip')
-            
-        put(env.local_path('env', 'req.pip'), env.remote_path(), use_sudo=True)
-        if self.__class__.update_libs:
-            self.update_packages()
 
-        # don't use dev.pip on every environment
-        if env.use_dev_pip:
-            put(env.local_path('env', 'dev.pip'), env.remote_path(), use_sudo=True)
-            if self.__class__.update_libs:
-                self.update_packages(pip_filename='dev.pip')
+        put(env.local_path('requirements', env.remote_path(), use_sudo=True))
+        self.update_packages(pip_filename=env.requirements_file)
 
     def create_project_directories(self):
         sudo('mkdir -p %s' % env.remote_path())

@@ -46,7 +46,7 @@ class EnvTask(Task):
         env.uwsgi_conf = '/etc/uwsgi/apps-enabled'
         env.hosts = []
         env.services = []
-        env.use_dev_pip = False
+        env.requirements_file = "requirements.txt"
         env.remote_virtualenv_py = 'virtualenv'
         env.python_version = '2.7'
         env.service_dir = '/etc/init.d/'
