@@ -14,7 +14,7 @@ from distutils.command.install import INSTALL_SCHEMES
 
 packages = []
 data_files = []
-root_dir = 'iteration'
+root_dir = 'deployit'
 
 def fullsplit(path, result=None):
     if result is None:
@@ -56,5 +56,6 @@ setup(
     data_files=data_files,
     zip_safe=False,
     install_requires=[
+        'Fabric>=1.5',
     ]
 )
