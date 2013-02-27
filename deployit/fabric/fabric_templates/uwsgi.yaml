@@ -1,0 +1,19 @@
+uwsgi:
+    uid: www-data
+    gid: www-data
+    socket: /tmp/uwsgi_{{ env_name }}_{{ project_name }}.sock
+    pyhome: {{ deploy_folder }}/{{ project_name }}/{{ env_name }}/{{ project_name }}-env
+    pythonpath: {{ deploy_folder }}/{{ project_name }}/{{ env_name }}
+    chdir: {{ deploy_folder }}/{{ project_name }}/{{ env_name }}/{{ project_name }}
+    env: DJANGO_SETTINGS_MODULE={{ settings_module }}
+    {% if newrelic_key -%}
+    enable-threads: True
+    single-interpreter: True
+    module: {{ project_name }}.wsgi:application
+    {%- else -%}
+    module: django.core.handlers.wsgi:WSGIHandler()
+    {%- endif %}
+    {% if debug -%}
+    enable-threads: True
+    python-autoreload: 1
+    {%- endif %}
