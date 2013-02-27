@@ -12,12 +12,13 @@ from fabric.api import env
 from fabric.tasks import _execute as _execute_ori
 from fabric.utils import abort
 import fabric
-import os
+import fabric.main
 import sys
+
 
 ##########################################################
 # Monkey patch the _execute method to exclude specific tasks
-
+###
 def _execute_wrapper(*args, **kwargs):
     from fabric.main import parse_options, parse_arguments
     parser, options, arguments = parse_options()
@@ -32,10 +33,11 @@ def _execute_wrapper(*args, **kwargs):
 
 fabric.tasks._execute = _execute_wrapper
 
+
 #############################################
 # Monkey patch the fab help. 
 # Distinguish between tasks and environments.
-
+###
 def _normal_list_pp(docstrings=True):
 
     from fabric.main import _print_docstring, indent, _task_names

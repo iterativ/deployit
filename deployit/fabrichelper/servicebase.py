@@ -13,6 +13,7 @@ from fabric.contrib.project import *
 from fabric.contrib.files import upload_template
 import os
 
+
 class BaseService(object):
     files = []
     deamons = []
@@ -56,10 +57,12 @@ class BaseService(object):
         for f in self.deamons:
             sudo('%s restart' % f % env)
 
+
 class NginxService(BaseService):
     files = [ {'filename': 'nginx.conf',
                'destination': '%(nginx_conf)s/%(env_name)s.%(project_name)s.conf'}, ]
     deamons = ['/etc/init.d/nginx']
+
 
 class NewReclicService(BaseService):
     files = [ {'filename': 'newrelic.ini',
@@ -108,6 +111,7 @@ class CeleryService(BaseService):
 
         command = 'update-rc.d %s defaults' % self.celeryd_init_script_file_name % env
         sudo(command)
+
 
 class PhpNginxService(BaseService):
     files = [ {'filename': 'php_nginx.conf',
