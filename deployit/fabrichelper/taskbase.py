@@ -24,7 +24,6 @@ from .decorators import warning, calc_duration
 import urllib
 
 class BaseTask(Task):
-    use_dev_pip = False
 
     def __init__(self):
         # see whether the tasks class overrides the hostslist

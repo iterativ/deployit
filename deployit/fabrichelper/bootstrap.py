@@ -74,7 +74,7 @@ class PuppetBaseTask(Task):
         env_dir = os.path.join(env.puppet_dir, env.project_name, env.env_name)
         self.create_dir_when_not_exists(env_dir)
         env_puppet_file = os.path.join(env.env_name, env.environment_manifest)
-        put(env_puppet_file, env_dir)
+        put(env_puppet_file, env_dir, use_sudo=True)
 
         with cd(env_dir):
             sudo('puppet apply %s' % env.environment_manifest)
