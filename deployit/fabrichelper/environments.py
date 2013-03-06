@@ -62,9 +62,9 @@ class EnvTask(Task):
 
     def dynamic_env(self):
         # helper methods
-        env.local_path = lambda *args: os.path.join(os.path.abspath(os.getcwd()), '..',  *args)
+        env.local_path = lambda *args: os.path.join(os.path.abspath(os.getcwd()), '..', *args)
         env.remote_path = lambda *args: os.path.join(env.remote_app_path, *args)
-        env.env_path = lambda *args: os.path.join(os.path.abspath(os.getcwd()), env.env_name,  *args)
+        env.env_path = lambda *args: os.path.join(os.path.abspath(os.getcwd()), env.env_name, *args)
         # attr path
         env.remote_app_path = env.remote_app_base % {
             'deploy_folder': env.deploy_folder,
@@ -75,6 +75,9 @@ class EnvTask(Task):
         env.local_app = env.local_path('src', env.project_name)   
         env.local_src = env.local_path('src')
         env.local_static_root = env.local_path(env.local_app, 'static')
+
+        if not 'settings_module' in env:
+            env.settings_module = env.project_name + ".settings"
 
     def _run_wrapper(self):
         self.__run()
