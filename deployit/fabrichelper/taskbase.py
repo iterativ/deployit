@@ -123,7 +123,8 @@ class Deploy(BaseTask):
         # dependency management
 
         put(env.local_path(os.path.join('env', 'requirements')), env.remote_path(), use_sudo=True)
-        self.update_packages(pip_filename=env.requirements_file)
+        if self.__class__.update_libs:
+            self.update_packages(pip_filename=env.requirements_file)
 
     def create_project_directories(self):
         sudo('mkdir -p %s' % env.remote_path())
