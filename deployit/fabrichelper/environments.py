@@ -57,7 +57,6 @@ class EnvTask(Task):
         env.project_manifest = 'project.pp'
         env.environment_manifest = 'env.pp'
         env.not_allowed_tasks = []
-        env.puppet_branch_name = 'master'
         env.debug = False
 
     def dynamic_env(self):

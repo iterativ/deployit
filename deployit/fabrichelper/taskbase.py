@@ -103,7 +103,7 @@ class Deploy(BaseTask):
         import getpass
         message = ', '.join([datetime.datetime.now().strftime("%Y-%d-%y %H:%M:%S,%f"), 
                              getpass.getuser(),
-                             self.get_current_revision() ,
+                             self.get_current_revision(),
                              message])
         sudo("echo '%s' >> %s" % (message, env.remote_path('log', 'deploy.log')))
         
@@ -122,7 +122,7 @@ class Deploy(BaseTask):
         self.ensure_virtualenv()
         # dependency management
 
-        put(env.local_path('requirements'), env.remote_path(), use_sudo=True)
+        put(env.local_path(os.path.join('env', 'requirements')), env.remote_path(), use_sudo=True)
         self.update_packages(pip_filename=env.requirements_file)
 
     def create_project_directories(self):
