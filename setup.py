@@ -16,6 +16,7 @@ packages = []
 data_files = []
 root_dir = 'deployit'
 
+
 def fullsplit(path, result=None):
     if result is None:
         result = []
@@ -57,5 +58,6 @@ setup(
     zip_safe=False,
     install_requires=[
         'Fabric>=1.5',
+        'Jinja2==2.6',
     ]
 )

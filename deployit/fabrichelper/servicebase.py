@@ -26,7 +26,7 @@ class BaseService(object):
                 self.deamons.append(dest)
 
     def _env_to_dict(self, adict):
-        for k,v in adict.items():
+        for k, v in adict.items():
             adict[k] = v % env 
         return adict        
     
@@ -59,14 +59,14 @@ class BaseService(object):
 
 
 class NginxService(BaseService):
-    files = [ {'filename': 'nginx.conf',
-               'destination': '%(nginx_conf)s/%(env_name)s.%(project_name)s.conf'}, ]
+    files = [{'filename': 'nginx.conf',
+              'destination': '%(nginx_conf)s/%(env_name)s.%(project_name)s.conf'}, ]
     deamons = ['/etc/init.d/nginx']
 
 
 class NewReclicService(BaseService):
-    files = [ {'filename': 'newrelic.ini',
-               'destination': os.path.join('%(deploy_folder)s/%(project_name)s/%(env_name)s','newrelic.ini')}, ]
+    files = [{'filename': 'newrelic.ini',
+              'destination': os.path.join('%(deploy_folder)s/%(project_name)s/%(env_name)s', 'newrelic.ini')}, ]
 
     def deploy(self):
         super(NewReclicService, self).deploy()
@@ -81,10 +81,10 @@ class NewReclicService(BaseService):
 
 
 class UwsgiService(BaseService):
-    files = [ {'filename': 'uwsgi.yaml',
-               'destination': '%(uwsgi_conf)s/%(env_name)s.%(project_name)s.yaml'},
-              {'filename': 'uwsgiemperor.conf',
-               'destination': '/etc/init/uwsgiemperor.conf'}, ]
+    files = [{'filename': 'uwsgi.yaml',
+              'destination': '%(uwsgi_conf)s/%(env_name)s.%(project_name)s.yaml'},
+             {'filename': 'uwsgiemperor.conf',
+              'destination': '/etc/init/uwsgiemperor.conf'}, ]
 
     def deploy(self):
         sudo('sudo pip install uWSGI==1.4.5')
@@ -99,12 +99,10 @@ class UwsgiService(BaseService):
 class CeleryService(BaseService):
     celeryd_init_script_file_name = 'celeryd_%(project_name)s_%(env_name)s'
     celeryd_init_script_file_path = '%(service_dir)s' + celeryd_init_script_file_name
-    files = [
-             {'filename': 'celeryd_default',
+    files = [{'filename': 'celeryd_default',
               'destination': '/etc/default/celeryd_%(project_name)s_%(env_name)s'},
              {'filename': 'celeryd_initd',
-              'destination': celeryd_init_script_file_path},
-    ]
+              'destination': celeryd_init_script_file_path}, ]
 
     def deploy(self):
         super(CeleryService, self).deploy()
@@ -114,6 +112,6 @@ class CeleryService(BaseService):
 
 
 class PhpNginxService(BaseService):
-    files = [ {'filename': 'php_nginx.conf',
-               'destination': '%(nginx_conf)s/%(env_name)s.%(project_name)s.conf'}, ]
+    files = [{'filename': 'php_nginx.conf',
+              'destination': '%(nginx_conf)s/%(env_name)s.%(project_name)s.conf'}, ]
     deamons = ['/etc/init.d/nginx', '/etc/init.d/php5-fpm']
