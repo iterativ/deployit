@@ -132,8 +132,8 @@ class Deploy(BaseTask):
         sudo('mkdir -p %s' % env.remote_path('log'))
 
     def copy_settings_files(self):
-        put(env.env_path('settings_local.py'),
-            env.remote_path(env.project_name), use_sudo=True)
+        if os.path.exists(env.env_path('settings_local.py')):
+            put(env.env_path('settings_local.py'), env.remote_path(env.project_name), use_sudo=True)
         self.copy_django_manage_file()
 
     def copy_django_manage_file(self):

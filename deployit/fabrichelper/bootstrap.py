@@ -55,7 +55,7 @@ class PuppetBaseTask(Task):
 
     def create_dir_when_not_exists(self, path):
         if not exists(path):
-            sudo('mkdir %s' % path)
+            sudo('mkdir -p %s' % path)
 
     def copy_modules(self):
         sudo('cp -r %s/modules/iterativ/* /etc/puppet/modules' % env.puppet_temp_dir)
