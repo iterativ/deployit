@@ -16,6 +16,7 @@ import os
 from fabric.api import env
 from .decorators import calc_duration, warning
 
+
 class PuppetBaseTask(Task):
 
     def base_install(self):
@@ -39,7 +40,6 @@ class PuppetBaseTask(Task):
         sudo('cd /etc/puppet/modules/ && puppet-module install puppetlabs/stdlib --force && cd -')
 
         self.update_upgrade()
-
 
     def clone_modules(self):
         # the hg clone uses the ssh method which requires a correct certificate
@@ -98,6 +98,7 @@ class PuppetBaseInstall(PuppetBaseTask):
         self.base_install()
         self.clone_modules()
 
+
 class PuppetClone(PuppetBaseTask):
     """
     Clone the git repo with all puppet modules and root manifests
@@ -106,6 +107,7 @@ class PuppetClone(PuppetBaseTask):
     @calc_duration
     def run(self):
         self.clone_modules()
+
 
 class PuppetUpdate(PuppetBaseTask):
     """
@@ -116,6 +118,7 @@ class PuppetUpdate(PuppetBaseTask):
     def run(self):
         self.update_modules()
 
+
 class PuppetProjectApply(PuppetBaseTask):
     """
     Apply the puppet project manifest
@@ -125,6 +128,7 @@ class PuppetProjectApply(PuppetBaseTask):
     def run(self):
         self.puppet_project_apply()
 
+
 class PuppetEnvApply(PuppetBaseTask):
     """
     Apply the environment specific manifest
@@ -133,7 +137,8 @@ class PuppetEnvApply(PuppetBaseTask):
     @calc_duration
     def run(self):
         self.puppet_env_apply()
-        
+
+
 class UpdateSystem(PuppetBaseTask):
     """
     Installs the newest packes (via update, upgrade). (Does not call sysupgarde)
@@ -142,6 +147,7 @@ class UpdateSystem(PuppetBaseTask):
     @calc_duration
     def run(self):
         self.update_upgrade()
+
 
 class RootToAdmin(Task):
     """

@@ -23,6 +23,7 @@ import shutil
 from .decorators import warning, calc_duration
 import urllib
 
+
 class BaseTask(Task):
 
     def __init__(self):
@@ -55,8 +56,8 @@ class BaseTask(Task):
             f.read()
             http_code = f.getcode()
             msg = 'HTTP status code: %s' % http_code
-            if http_code <> 200:
-                print 'ERROR %s' % (msg)
+            if http_code != 200:
+                print 'ERROR %s' % msg
             else:
                 print msg
             return http_code
@@ -80,6 +81,7 @@ class BaseTask(Task):
             s = service_klass()
             s.restart()
 
+
 class Deploy(BaseTask):
     """
     Deploy all sources to the target and update libraries
@@ -90,11 +92,11 @@ class Deploy(BaseTask):
     def deploy_static(self):
         local('python %(local_src)s/manage.py collectstatic --noinput' % env)
         rsync_project(
-            remote_dir = env.remote_path(env.project_name),
-            local_dir = env.local_static_root,
-            delete = True,
-            exclude = env.rsync_exclude,
-            extra_opts = '--rsync-path="sudo rsync"',
+            remote_dir=env.remote_path(env.project_name),
+            local_dir=env.local_static_root,
+            delete=True,
+            exclude=env.rsync_exclude,
+            extra_opts='--rsync-path="sudo rsync"',
         )
         shutil.rmtree(env.local_static_root)
         self.adjust_rights()
@@ -154,10 +156,10 @@ class Deploy(BaseTask):
 
         # sources & templates
         rsync_project(
-            remote_dir = env.remote_app_path,
-            local_dir = env.local_app,
-            exclude = env.rsync_exclude,
-            extra_opts = '--rsync-path="sudo rsync"',
+            remote_dir=env.remote_app_path,
+            local_dir=env.local_app,
+            exclude=env.rsync_exclude,
+            extra_opts='--rsync-path="sudo rsync"',
         )
 
         self.deploy_static()
@@ -219,6 +221,7 @@ class RestartServices(BaseTask):
     def run(self):
         self.restart_services()
 
+
 class DeploySSLCerts(BaseTask):
     """ 
     Deploy the given SSL Certs. 
@@ -235,6 +238,7 @@ class DeploySSLCerts(BaseTask):
         else:
             print 'ERROR: Path not found '+path
 
+
 class ResetLoad(BaseTask):
     """
     Reset database
@@ -247,7 +251,8 @@ class ResetLoad(BaseTask):
         with cd(env.remote_path()):
             self.virtualenv('python -u manage.py resetload -y')
         self.adjust_rights()
-        
+
+
 class TailLog(BaseTask):
     """
     Show log file
@@ -257,11 +262,13 @@ class TailLog(BaseTask):
     def run(self, no_input=False):
         sudo('tail -f %s --lines=30' % env.remote_path('log', '%(project_name)s.log' % env))
 
+
 class CheckForUpdates(BaseTask):
     """
     Check if there are some package updates available (current activated env)
     """
-    name ="check_for_updates"
+    name = "check_for_updates"
+
     def compare_version(self, version_local, version_remote):
         status = 0
         for l, r in izip_longest(version_local.split('.'), version_remote.split('.')):     
@@ -308,6 +315,7 @@ class CheckForUpdates(BaseTask):
             pkg_info = '{dist.project_name} {dist.version}'.format(dist=dist)
             print '\t{pkg_info:40} {msg}'.format(pkg_info=pkg_info, msg=msg) 
 
+
 class Delete(BaseTask):
     """
     Delete all files
@@ -318,3 +326,4 @@ class Delete(BaseTask):
     @calc_duration
     def run(self):
         sudo('rm -rf %(remote_app_path)s' % env)
+        ...
