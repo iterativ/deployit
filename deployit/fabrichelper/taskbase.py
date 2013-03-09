@@ -326,4 +326,5 @@ class Delete(BaseTask):
     @calc_duration
     def run(self):
         sudo('rm -rf %(remote_app_path)s' % env)
-        ...
+        # now we have to delete all the files created for the services
+        # iterate over services and call their cleanup functions
