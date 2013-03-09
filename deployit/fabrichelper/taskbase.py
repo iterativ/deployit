@@ -231,12 +231,12 @@ class DeploySSLCerts(BaseTask):
     def run(self, path):
         if os.path.exists(path):
             print 'Upload certs from %s ...' % path
-            put(os.path.join(path,'*.pem'), '/etc/ssl/certs/%s.pem' % env.ssl_cert , use_sudo=True)
-            put(os.path.join(path,'*.key'), '/etc/ssl/private/%s.key' % env.ssl_cert, use_sudo=True)
+            put(os.path.join(path, '*.pem'), '/etc/ssl/certs/%s.pem' % env.ssl_cert, use_sudo=True)
+            put(os.path.join(path, '*.key'), '/etc/ssl/private/%s.key' % env.ssl_cert, use_sudo=True)
             self.restart_services()           
         
         else:
-            print 'ERROR: Path not found '+path
+            print 'ERROR: Path not found ' + path
 
 
 class ResetLoad(BaseTask):
@@ -328,3 +328,7 @@ class Delete(BaseTask):
         sudo('rm -rf %(remote_app_path)s' % env)
         # now we have to delete all the files created for the services
         # iterate over services and call their cleanup functions
+        #for service_klass in env.services:
+        #    service = service_klass()
+
+
