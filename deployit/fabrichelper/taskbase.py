@@ -7,14 +7,16 @@
 #
 # Created on Jul 02, 2012
 # @author: paweloque <paweloque@gmail.com>
+import tempfile
 
 from fabric.api import *
+from fabric.contrib.console import confirm
 from fabric.contrib.project import *
 from fabric.contrib.files import exists
 from .servicebase import *
 from fabric.api import env
-from fabric.utils import warn
 import datetime
+import time
 from fabric.tasks import Task
 import xmlrpclib
 import pip
@@ -22,6 +24,7 @@ from itertools import izip_longest
 import shutil
 from .decorators import warning, calc_duration
 import urllib
+
 
 class BaseTask(Task):
 
@@ -55,8 +58,8 @@ class BaseTask(Task):
             f.read()
             http_code = f.getcode()
             msg = 'HTTP status code: %s' % http_code
-            if http_code <> 200:
-                print 'ERROR %s' % (msg)
+            if http_code != 200:
+                print 'ERROR %s' % msg
             else:
                 print msg
             return http_code
@@ -80,6 +83,7 @@ class BaseTask(Task):
             s = service_klass()
             s.restart()
 
+
 class Deploy(BaseTask):
     """
     Deploy all sources to the target and update libraries
@@ -90,11 +94,11 @@ class Deploy(BaseTask):
     def deploy_static(self):
         local('python %(local_src)s/manage.py collectstatic --noinput' % env)
         rsync_project(
-            remote_dir = env.remote_path(env.project_name),
-            local_dir = env.local_static_root,
-            delete = True,
-            exclude = env.rsync_exclude,
-            extra_opts = '--rsync-path="sudo rsync"',
+            remote_dir=env.remote_path(env.project_name),
+            local_dir=env.local_static_root,
+            delete=True,
+            exclude=env.rsync_exclude,
+            extra_opts='--rsync-path="sudo rsync"',
         )
         shutil.rmtree(env.local_static_root)
         self.adjust_rights()
@@ -154,10 +158,10 @@ class Deploy(BaseTask):
 
         # sources & templates
         rsync_project(
-            remote_dir = env.remote_app_path,
-            local_dir = env.local_app,
-            exclude = env.rsync_exclude,
-            extra_opts = '--rsync-path="sudo rsync"',
+            remote_dir=env.remote_app_path,
+            local_dir=env.local_app,
+            exclude=env.rsync_exclude,
+            extra_opts='--rsync-path="sudo rsync"',
         )
 
         self.deploy_static()
@@ -219,6 +223,7 @@ class RestartServices(BaseTask):
     def run(self):
         self.restart_services()
 
+
 class DeploySSLCerts(BaseTask):
     """ 
     Deploy the given SSL Certs. 
@@ -228,12 +233,13 @@ class DeploySSLCerts(BaseTask):
     def run(self, path):
         if os.path.exists(path):
             print 'Upload certs from %s ...' % path
-            put(os.path.join(path,'*.pem'), '/etc/ssl/certs/%s.pem' % env.ssl_cert , use_sudo=True)
-            put(os.path.join(path,'*.key'), '/etc/ssl/private/%s.key' % env.ssl_cert, use_sudo=True)
+            put(os.path.join(path, '*.pem'), '/etc/ssl/certs/%s.pem' % env.ssl_cert, use_sudo=True)
+            put(os.path.join(path, '*.key'), '/etc/ssl/private/%s.key' % env.ssl_cert, use_sudo=True)
             self.restart_services()           
         
         else:
-            print 'ERROR: Path not found '+path
+            print 'ERROR: Path not found ' + path
+
 
 class ResetLoad(BaseTask):
     """
@@ -247,7 +253,8 @@ class ResetLoad(BaseTask):
         with cd(env.remote_path()):
             self.virtualenv('python -u manage.py resetload -y')
         self.adjust_rights()
-        
+
+
 class TailLog(BaseTask):
     """
     Show log file
@@ -257,11 +264,13 @@ class TailLog(BaseTask):
     def run(self, no_input=False):
         sudo('tail -f %s --lines=30' % env.remote_path('log', '%(project_name)s.log' % env))
 
+
 class CheckForUpdates(BaseTask):
     """
     Check if there are some package updates available (current activated env)
     """
-    name ="check_for_updates"
+    name = "check_for_updates"
+
     def compare_version(self, version_local, version_remote):
         status = 0
         for l, r in izip_longest(version_local.split('.'), version_remote.split('.')):     
@@ -308,6 +317,7 @@ class CheckForUpdates(BaseTask):
             pkg_info = '{dist.project_name} {dist.version}'.format(dist=dist)
             print '\t{pkg_info:40} {msg}'.format(pkg_info=pkg_info, msg=msg) 
 
+
 class Delete(BaseTask):
     """
     Delete all files
@@ -318,3 +328,28 @@ class Delete(BaseTask):
     @calc_duration
     def run(self):
         sudo('rm -rf %(remote_app_path)s' % env)
+        # now we have to delete all the files created for the services
+        # iterate over services and call their cleanup functions
+        #for service_klass in env.services:
+        #    service = service_klass()
+
+
+class LoadBackup(BaseTask):
+    """
+    load backup dump into local db (postgres or mysql only)
+    """
+    name = "load_backup"
+
+    @calc_duration
+    def run(self):
+        backup_remote_path = os.path.join(env.backup_remote_path, env.database_backup_name)
+        env.backup_local_path = os.path.join(tempfile.gettempdir(), env.database_backup_name)
+
+        use_existing = False
+        if os.path.exists(env.backup_local_path):
+            use_existing = confirm('Use existing backup (from %s)?' % time.ctime(os.path.getctime(env.backup_local_path)))
+
+        if not use_existing:
+            get(backup_remote_path, env.backup_local_path)
+
+        local('python %(local_src)s/manage.py loaddump --dump_path=%(backup_local_path)s' % env)
