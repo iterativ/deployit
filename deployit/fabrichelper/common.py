@@ -31,6 +31,7 @@ puppet_project_apply = PuppetProjectApply()
 puppet_env_apply = PuppetEnvApply()
 update_system = UpdateSystem()
 roottoadmin = RootToAdmin()
+loadbackup = LoadBackup()
 
 # dns_create_standard_domain = DNSCreateNewStandardDomain()
 # dns_add_cname_subdomain = DNSAddCNAMESubdomain()
@@ -50,5 +51,5 @@ class BootstrapVagrantTask(Task):
         puppet_project_apply.run()
         puppet_env_apply.run()
         vagrant_deploy.run()
-        
+
 vagrant_bootstrap = BootstrapVagrantTask()

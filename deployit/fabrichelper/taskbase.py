@@ -7,14 +7,16 @@
 #
 # Created on Jul 02, 2012
 # @author: paweloque <paweloque@gmail.com>
+import tempfile
 
 from fabric.api import *
+from fabric.contrib.console import confirm
 from fabric.contrib.project import *
 from fabric.contrib.files import exists
 from .servicebase import *
 from fabric.api import env
-from fabric.utils import warn
 import datetime
+import time
 from fabric.tasks import Task
 import xmlrpclib
 import pip
@@ -318,3 +320,24 @@ class Delete(BaseTask):
     @calc_duration
     def run(self):
         sudo('rm -rf %(remote_app_path)s' % env)
+
+
+class LoadBackup(BaseTask):
+    """
+    load backup dump into local db (postgres or mysql only)
+    """
+    name = "load_backup"
+
+    @calc_duration
+    def run(self):
+        backup_remote_path = os.path.join(env.backup_remote_path, env.database_backup_name)
+        env.backup_local_path = os.path.join(tempfile.gettempdir(), env.database_backup_name)
+
+        answer = False
+        if os.path.exists(env.backup_local_path):
+            use_existing = confirm('Use existing backup (from %s)?' % time.ctime(os.path.getctime(env.backup_local_path)))
+
+        if not use_existing:
+            get(backup_remote_path, env.backup_local_path)
+
+        local('python %(local_src)s/manage.py loaddump --dump_path=%(backup_local_path)s' % env)

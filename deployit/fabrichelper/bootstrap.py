@@ -148,7 +148,7 @@ class RootToAdmin(Task):
     Disable Root Login and create a new custom admin user with his own ssh key
     
     Run this command as priveleged user as it creates the new admin user (and disables root)
-    zB: fab cloudsigma roottoguru:root
+    e.g.: fab cloudsigma roottoguru:root
     
     Run other commands:
         fab vagrant taillog  -i /Users/user/.ssh/host.pem

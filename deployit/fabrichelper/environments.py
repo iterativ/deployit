@@ -50,7 +50,7 @@ class EnvTask(Task):
         env.remote_virtualenv_py = 'virtualenv'
         env.python_version = '2.7'
         env.service_dir = '/etc/init.d/'
-
+        env.backup_remote_path = '/var/backups/postgres/pgbackup/'
         # settings for puppet
         env.puppet_temp_dir = '/root/puppettmp'
         env.puppet_dir = '/root/puppet'
@@ -74,6 +74,9 @@ class EnvTask(Task):
         env.local_app = env.local_path('src', env.project_name)   
         env.local_src = env.local_path('src')
         env.local_static_root = env.local_path(env.local_app, 'static')
+
+        if not 'database_backup_name' in env:
+            env.database_backup_name = '%s_%s.sql' % (env.project_name, env.env_name)
 
         if not 'settings_module' in env:
             env.settings_module = env.project_name + ".settings"
