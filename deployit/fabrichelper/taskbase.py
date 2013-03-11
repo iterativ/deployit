@@ -345,7 +345,7 @@ class LoadBackup(BaseTask):
         backup_remote_path = os.path.join(env.backup_remote_path, env.database_backup_name)
         env.backup_local_path = os.path.join(tempfile.gettempdir(), env.database_backup_name)
 
-        answer = False
+        use_existing = False
         if os.path.exists(env.backup_local_path):
             use_existing = confirm('Use existing backup (from %s)?' % time.ctime(os.path.getctime(env.backup_local_path)))
 
