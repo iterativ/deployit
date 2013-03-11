@@ -45,6 +45,7 @@ class BootstrapVagrantTask(Task):
     bootstraps complete vagrant env
     """
     name = 'vagrant_bootstrap'
+
     @calc_duration
     def run(self):
         puppet_base_install.run()

@@ -12,12 +12,14 @@ from fabric.api import *
 from fabric.api import env
 import time
 
+
 def warning(f):
     def new_f(*args, **kwargs):
         warn('Executing task \x1b[5;31m%s\x1b[0;39m on \x1b[5;31m%s\x1b[0;39m environment' % (args[0].name, env.env_name))
         prompt("Enter 'c' to continue", validate=r'c$')
         f(*args, **kwargs)
     return new_f
+
 
 def calc_duration(f):
     def new_f(*args, **kwargs):
