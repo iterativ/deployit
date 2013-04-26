@@ -38,6 +38,9 @@ class PuppetBaseTask(Task):
         # add puppet stdlib
         sudo('gem install -f puppet-module')
         sudo('cd /etc/puppet/modules/ && puppet-module install puppetlabs/stdlib --force && cd -')
+        # install puppet mysql module
+        sudo('cd /etc/puppet/modules/ && puppet-module install puppetlabs/mysql --force && cd -')
+
 
         self.update_upgrade()
 
