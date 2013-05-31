@@ -32,6 +32,7 @@ class EnvTask(Task):
                              'CACHE/'
                              '.keep',
                              '*.pyc',
+                             '*.log',
                              '*.db',
                              '*.dat']
         env.project_name = None
