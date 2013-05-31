@@ -38,6 +38,9 @@ class PuppetBaseTask(Task):
         # add puppet stdlib
         sudo('gem install -f puppet-module')
         sudo('cd /etc/puppet/modules/ && puppet-module install puppetlabs/stdlib --force && cd -')
+        # install puppet mysql module
+        sudo('cd /etc/puppet/modules/ && puppet-module install puppetlabs/mysql --force && cd -')
+
 
         self.update_upgrade()
 
@@ -55,7 +58,7 @@ class PuppetBaseTask(Task):
 
     def create_dir_when_not_exists(self, path):
         if not exists(path):
-            sudo('mkdir %s' % path)
+            sudo('mkdir -p %s' % path)
 
     def copy_modules(self):
         sudo('cp -r %s/modules/iterativ/* /etc/puppet/modules' % env.puppet_temp_dir)

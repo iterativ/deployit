@@ -41,7 +41,11 @@ class BaseService(object):
             context_file = context.copy()
             
             if 'extra_context' in f:
-                context_file.update(f['extra_context']) 
+                context_file.update(f['extra_context'])
+
+            template_dir = context_file['global_template_dir']
+            if f.get('template_dir'):
+                template_dir = f['template_dir']
             
             upload_template(f['filename'], 
                             f['destination'], 
@@ -49,7 +53,7 @@ class BaseService(object):
                             backup=False, 
                             use_jinja=True,
                             use_sudo=True,
-                            template_dir=context_file['global_template_dir'])
+                            template_dir=template_dir)
         for f in self.deamons:
             sudo('chmod +x %s' % f % env)
     
