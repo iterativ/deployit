@@ -54,8 +54,8 @@ class EnvTask(Task):
         env.service_dir = '/etc/init.d/'
         env.backup_remote_path = '/var/backups/postgres/pgbackup/'
         # settings for puppet
-        env.puppet_temp_dir = '/root/puppettmp'
-        env.puppet_dir = '/root/puppet'
+        env.puppet_temp_dir = '~/puppettmp/'
+        env.puppet_dir = '~/puppet/'
         env.project_manifest = 'project.pp'
         env.environment_manifest = 'env.pp'
         env.not_allowed_tasks = []
