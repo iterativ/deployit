@@ -20,6 +20,12 @@ def warning(f):
         f(*args, **kwargs)
     return new_f
 
+def production(f):
+    def new_f(*args, **kwargs):
+        warn('\033[31m Executing task on production environment?\x1b[0;39m')
+        prompt("Enter 'yes' to continue", validate=r'yes$')
+        f(*args, **kwargs)
+    return new_f
 
 def calc_duration(f):
     def new_f(*args, **kwargs):
