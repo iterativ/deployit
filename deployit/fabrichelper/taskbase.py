@@ -162,7 +162,6 @@ class Deploy(BaseTask):
             local_dir=env.local_app,
             exclude=env.rsync_exclude,
             extra_opts='--rsync-path="sudo rsync"',
-            delete=True,
         )
 
         self.deploy_static()
