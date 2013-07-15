@@ -41,7 +41,6 @@ class PuppetBaseTask(Task):
         # install puppet mysql module
         sudo('cd /etc/puppet/modules/ && puppet-module install puppetlabs/mysql --force && cd -')
 
-
         self.update_upgrade()
 
     def clone_modules(self):

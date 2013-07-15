@@ -162,11 +162,12 @@ class Deploy(BaseTask):
             local_dir=env.local_app,
             exclude=env.rsync_exclude,
             extra_opts='--rsync-path="sudo rsync"',
+            delete=True,
         )
 
         self.deploy_static()
         self.copy_settings_files()
-
+        self.clear_pycs()
         self.adjust_rights()
         
         if self.update_libs:
