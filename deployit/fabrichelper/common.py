@@ -22,6 +22,7 @@ deploy_services = DeployServices()
 deploy_ssl_certs = DeploySSLCerts()
 restart_services = RestartServices()
 resetload = ResetLoad()
+migrate = Migrate()
 delete = Delete()
 
 puppet_base_install = PuppetBaseInstall()

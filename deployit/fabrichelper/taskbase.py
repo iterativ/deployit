@@ -256,6 +256,18 @@ class ResetLoad(BaseTask):
         self.adjust_rights()
 
 
+class Migrate(BaseTask):
+    """
+    South Migration Usage: fab <env> migrate:<appname>
+    """
+    name = "migrate"
+
+    @calc_duration
+    def run(self, app):
+        with cd(env.remote_path()):
+            self.virtualenv('python -u manage.py migrate {0}'.format(app))
+
+
 class TailLog(BaseTask):
     """
     Show log file
