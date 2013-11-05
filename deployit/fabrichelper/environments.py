@@ -60,6 +60,7 @@ class EnvTask(Task):
         env.environment_manifest = 'env.pp'
         env.not_allowed_tasks = []
         env.debug = False
+        env.uwsgi_count = 4
 
     def dynamic_env(self):
         # helper methods

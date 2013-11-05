@@ -6,6 +6,9 @@ uwsgi:
     pythonpath: {{ deploy_folder }}/{{ project_name }}/{{ env_name }}
     chdir: {{ deploy_folder }}/{{ project_name }}/{{ env_name }}/{{ project_name }}
     env: DJANGO_SETTINGS_MODULE={{ settings_module }}
+    processes: {{ uwsgi_count }}
+    threads: {{ uwsgi_count }}
+    logto: {{ deploy_folder }}/{{ project_name }}/{{ env_name }}/log/uwsgi_{{ project_name }}_{{ env_name }}.log
     {% if newrelic_key -%}
     enable-threads: True
     single-interpreter: True
