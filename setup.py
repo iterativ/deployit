@@ -48,7 +48,7 @@ for scheme in INSTALL_SCHEMES.values():
 
 setup(
     name='deployit',
-    version='0.3.4',
+    version='0.3.5',
     description="Base web app",
     author='Daniel Egger',
     author_email='daniel.egger@iterativ.ch',
@@ -59,5 +59,6 @@ setup(
     install_requires=[
         'Fabric>=1.5',
         'Jinja2==2.6',
+        'python-dateutil>=2.2',
     ]
 )
