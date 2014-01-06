@@ -68,7 +68,6 @@ class BaseTask(Task):
 
     def update_packages(self, pip_filename='requirements.txt'):
         self.adjust_rights('root')
-        self.virtualenv('pip install --upgrade pip pyinotify')
         self.virtualenv('pip install -r %s/%s --upgrade' % (env.remote_app_path, pip_filename))
         self.adjust_rights()
 
