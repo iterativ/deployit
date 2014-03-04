@@ -145,7 +145,6 @@ class Deploy(BaseTask):
                 '-d "deployment[changelog]=%(changelog)s" '
                 '-d "deployment[user]=%(user)s" https://rpm.newrelic.com/deployments.xml > /dev/null' % context)
 
-
     def get_current_revision(self):
         with settings(warn_only=True):
             cmd = ''
@@ -214,6 +213,48 @@ class Deploy(BaseTask):
 
         if migrate:
             Migrate().run()
+
+
+class FlaskDeploy(Deploy):
+    """
+    Deploy flask project
+    """
+    name = "flask_deploy"
+
+    @calc_duration
+    def run(self, no_input=False, migrate=False):
+
+        self.create_project_directories()
+
+        self.initialize_virtualenv()
+
+        # python sources
+        rsync_project(
+            remote_dir=env.remote_path(),
+            local_dir=env.local_path('pythonsrc'),
+            exclude=env.rsync_exclude,
+            extra_opts='--rsync-path="sudo rsync"',
+        )
+
+        rsync_project(
+            remote_dir=env.remote_path(),
+            local_dir=env.local_path('dist'),
+            delete=True,
+            exclude=env.rsync_exclude,
+            extra_opts='--rsync-path="sudo rsync"',
+        )
+        self.clear_pycs()
+        self.adjust_rights()
+
+        # TODO: deg: anpassungen und service deployment files, muss jetzt noch von Hand gemacht werden!!
+        # if self.update_libs:
+        #     self.deploy_services()
+        # self.restart_services()
+        # self.adjust_rights()
+
+        status_code = self.load_site("http://%s" % env.server_names[0])
+        self.deploy_log(message='%s %s: HTTP status code: %s' % (env.env_name, self.__class__.name, status_code))
+
 
 class FastDeploy(Deploy):
     """
