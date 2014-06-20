@@ -246,11 +246,9 @@ class FlaskDeploy(Deploy):
         self.clear_pycs()
         self.adjust_rights()
 
-        # TODO: deg: anpassungen und service deployment files, muss jetzt noch von Hand gemacht werden!!
-        # if self.update_libs:
-        #     self.deploy_services()
-        # self.restart_services()
-        # self.adjust_rights()
+        self.deploy_services()
+        self.restart_services()
+        #self.adjust_rights()
 
         status_code = self.load_site("http://%s" % env.server_names[0])
         self.deploy_log(message='%s %s: HTTP status code: %s' % (env.env_name, self.__class__.name, status_code))
