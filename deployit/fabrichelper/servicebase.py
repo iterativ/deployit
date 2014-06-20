@@ -119,3 +119,16 @@ class PhpNginxService(BaseService):
     files = [{'filename': 'php_nginx.conf',
               'destination': '%(nginx_conf)s/%(env_name)s.%(project_name)s.conf'}, ]
     deamons = ['/etc/init.d/nginx', '/etc/init.d/php5-fpm']
+
+
+class FlaskUwsgiService(UwsgiService):
+    files = [{'filename': 'flask_uwsgi.yaml',
+              'destination': '%(uwsgi_conf)s/%(env_name)s.%(project_name)s.yaml'},
+             {'filename': 'uwsgiemperor.conf',
+              'destination': '/etc/init/uwsgiemperor.conf'}, ]
+
+
+class FlaskNginxService(NginxService):
+    files = [{'filename': 'flask_nginx.conf',
+              'destination': '%(nginx_conf)s/%(env_name)s.%(project_name)s.conf'}, ]
+    deamons = ['/etc/init.d/nginx']
