@@ -1,0 +1,11 @@
+uwsgi:
+    uid: www-data
+    gid: www-data
+    socket: /tmp/uwsgi_{{ env_name }}_{{ project_name }}.sock
+    pyhome: {{ deploy_folder }}/{{ project_name }}/{{ env_name }}/{{ project_name }}-env
+    pythonpath: {{ deploy_folder }}/{{ project_name }}/{{ env_name }}/pythonsrc
+    processes: {{ uwsgi_count }}
+    threads: {{ uwsgi_count }}
+    logto: {{ deploy_folder }}/{{ project_name }}/{{ env_name }}/log/uwsgi_{{ project_name }}_{{ env_name }}.log
+    module: server
+    callable: app
