@@ -1,0 +1,6 @@
+{
+    "lastDeployment": "{{ lastDeployment }}", 
+    "gitChecksum": "{{ gitChecksum }}",
+    "gitTimestamp": "{{ gitTimestamp }}",
+    "itemCountUrl": "{{ itemCountUrl }}"
+}  

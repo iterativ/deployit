@@ -68,6 +68,17 @@ class NginxService(BaseService):
     deamons = ['/etc/init.d/nginx']
 
 
+class EnvStatusService(BaseService):
+    files = [{'filename': 'envstatus.json',
+              'destination': '%(deploy_folder)s/%(project_name)s/%(env_name)s/%(project_name)s/static/envstatus.conf'}, ]
+
+    def deploy(self):
+        env.gitChecksum = local('git rev-parse HEAD', capture=True)
+        env.lastDeployment = datetime.datetime.now().__str__()
+        env.lastCommitDate = local('git log -1 --format=%cd', capture=True)
+        super(EnvStatusService, self).deploy()
+
+
 class NewReclicService(BaseService):
     files = [{'filename': 'newrelic.ini',
               'destination': os.path.join('%(deploy_folder)s/%(project_name)s/%(env_name)s', 'newrelic.ini')}, ]
