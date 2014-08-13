@@ -76,7 +76,7 @@ class EnvStatusService(BaseService):
     def deploy(self):
         # TODO: this will only work with git. 
         env.envStatusLastDeployment = datetime.now().__str__()
-        env.envStatusGitBranch = local("git rev-parse --abbrev-ref HEAD")
+        env.envStatusGitBranch = local("git rev-parse --abbrev-ref HEAD", capture=True)
         env.envStatusGitChecksum = local('git rev-parse HEAD', capture=True)
         env.envStatusLastCommitDate = local('git log -1 --format=%cd', capture=True)
         super(EnvStatusService, self).deploy()
