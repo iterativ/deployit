@@ -71,12 +71,14 @@ class NginxService(BaseService):
 
 class EnvStatusService(BaseService):
     files = [{'filename': 'envstatus.json',
-              'destination': '%(deploy_folder)s/%(project_name)s/%(env_name)s/%(project_name)s/static/envstatus.conf'}, ]
+              'destination': '%(deploy_folder)s/%(project_name)s/%(env_name)s/%(project_name)s/static/envstatus.json'}, ]
 
     def deploy(self):
-        env.gitChecksum = local('git rev-parse HEAD', capture=True)
-        env.lastDeployment = datetime.now().__str__()
-        env.lastCommitDate = local('git log -1 --format=%cd', capture=True)
+        # TODO: this will only work with git. 
+        env.envStatusLastDeployment = datetime.now().__str__()
+        env.envStatusGitBranch = local("git branch | awk '/^\*/{print $2}'")
+        env.envStatusGitChecksum = local('git rev-parse HEAD', capture=True)
+        env.envStatusLastCommitDate = local('git log -1 --format=%cd', capture=True)
         super(EnvStatusService, self).deploy()
 
 
