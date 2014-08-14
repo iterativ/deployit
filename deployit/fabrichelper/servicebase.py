@@ -146,3 +146,9 @@ class FlaskNginxService(NginxService):
     files = [{'filename': 'flask_nginx.conf',
               'destination': '%(nginx_conf)s/%(env_name)s.%(project_name)s.conf'}, ]
     deamons = ['/etc/init.d/nginx']
+
+
+class StaticNginxService(NginxService):
+    files = [{'filename': 'static_nginx.conf',
+              'destination': '%(nginx_conf)s/%(env_name)s.%(project_name)s.conf'}, ]
+    deamons = ['/etc/init.d/nginx']
