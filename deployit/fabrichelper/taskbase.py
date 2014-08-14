@@ -254,6 +254,33 @@ class FlaskDeploy(Deploy):
         self.deploy_log(message='%s %s: HTTP status code: %s' % (env.env_name, self.__class__.name, status_code))
 
 
+class StaticDeploy(Deploy):
+    """
+    Deploy flask project
+    """
+    name = "static_deploy"
+
+    @calc_duration
+    def run(self, no_input=False, migrate=False):
+
+        self.create_project_directories()
+
+        rsync_project(
+            remote_dir=env.remote_path(),
+            local_dir=env.local_path('dist'),
+            delete=True,
+            exclude=env.rsync_exclude,
+            extra_opts='--rsync-path="sudo rsync"',
+        )
+        self.adjust_rights()
+        self.deploy_services()
+        self.restart_services()
+        #self.adjust_rights()
+
+        status_code = self.load_site("http://%s" % env.server_names[0])
+        self.deploy_log(message='%s %s: HTTP status code: %s' % (env.env_name, self.__class__.name, status_code))
+
+
 class FastDeploy(Deploy):
     """
     Deploy all sources to the target
