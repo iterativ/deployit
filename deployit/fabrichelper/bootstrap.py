@@ -27,21 +27,27 @@ class PuppetBaseTask(Task):
         sudo('rm -f /etc/default/locale')
         sudo('echo -e "LANG=en_US.UTF-8\nLC_ALL=en_US.UTF-8\nLC_CTYPE=en_US.UTF-8\nLANGUAGE=en_US.UTF-8" >> /etc/default/locale')
 
-        # gnupg is needed for apt-key
-        sudo('apt-get -y install gnupg')
-        
-        sudo('apt-get update')
-        sudo('apt-get -y install rubygems')
-        sudo('apt-get -y install puppet puppetmaster facter')
-        sudo('apt-get -y install mercurial git')
 
-        # add puppet stdlib
-        sudo('gem install -f puppet-module')
-        sudo('cd /etc/puppet/modules/ && puppet-module install puppetlabs/stdlib --force && cd -')
-        # install puppet mysql module
-        sudo('cd /etc/puppet/modules/ && puppet-module install puppetlabs/mysql --force && cd -')
+        sudo('apt-get -y install git')
 
-        self.update_upgrade()
+        sudo('puppet module install puppetlabs-stdlib --version 4.3.2 --force')
+        sudo('puppet module install puppetlabs-vcsrepo --version 1.1.0 --force')
+        sudo('puppet module install puppetlabs-concat --version 1.0.4 --force')
+        sudo('puppet module install puppetlabs-apt --version 1.6.0 --force')
+        sudo('puppet module install puppetlabs-firewall --version 1.1.3 --force')
+        sudo('puppet module install puppetlabs-ntp --version 3.1.2 --force')
+        sudo('puppet module install puppetlabs-postgresql --version 3.4.2 --force')
+        sudo('puppet module install puppetlabs-mysql --version 2.3.1 --force')
+        sudo('puppet module install puppetlabs-inifile --version 1.1.3 --force')
+
+        sudo('puppet module install puppetlabs-rabbitmq --version 4.1.0 --force')
+        sudo('puppet module install puppetlabs-mongodb --version 0.8.0 --force')
+        sudo('puppet module install puppetlabs-haproxy --version 1.0.0 --force')
+        sudo('puppet module install puppetlabs-ruby --version 0.2.1 --force')
+        sudo('puppet module install puppetlabs-nodejs --version 0.6.1 --force')
+
+        #sudo('puppet module install jfryman-nginx --version 0.0.10 --force')
+
 
     def clone_modules(self):
         # the hg clone uses the ssh method which requires a correct certificate
@@ -98,7 +104,10 @@ class PuppetBaseInstall(PuppetBaseTask):
     @calc_duration
     def run(self):
         self.base_install()
-        self.clone_modules()
+        self.update_upgrade()
+
+        # TODO: readd
+        #self.clone_modules()
 
 
 class PuppetClone(PuppetBaseTask):
