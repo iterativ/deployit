@@ -42,6 +42,9 @@ class BaseTask(Task):
     def virtualenv(self, command):
         sudo("source %s/bin/activate && %s" % (env.remote_app_path_virtualenv, command))
 
+    def managepy(self, command):
+        self.virtualenv('python -u %s/manage.py %s' % (env.remote_path(), command))
+
     def adjust_rights(self, user=env.www_server_uid):
         sudo("chown -R {user}:{user} {remote_app_path}".format(user=user, remote_app_path=env.remote_app_path))
 
