@@ -29,6 +29,7 @@ class PuppetBaseTask(Task):
 
 
         sudo('apt-get -y install git')
+        sudo('apt-get -y install puppet-common')
 
         sudo('puppet module install puppetlabs-stdlib --version 4.3.2 --force')
         sudo('puppet module install puppetlabs-vcsrepo --version 1.1.0 --force')
@@ -106,8 +107,7 @@ class PuppetBaseInstall(PuppetBaseTask):
         self.base_install()
         self.update_upgrade()
 
-        # TODO: readd
-        #self.clone_modules()
+        self.clone_modules()
 
 
 class PuppetClone(PuppetBaseTask):
