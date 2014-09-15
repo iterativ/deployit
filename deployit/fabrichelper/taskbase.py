@@ -259,7 +259,7 @@ class FlaskDeploy(Deploy):
 
 class StaticDeploy(Deploy):
     """
-    Deploy flask project
+    Deploy static project
     """
     name = "static_deploy"
 
