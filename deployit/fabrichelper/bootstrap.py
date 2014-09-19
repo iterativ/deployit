@@ -30,6 +30,10 @@ class PuppetBaseTask(Task):
 
         sudo('apt-get -y install git')
         sudo('apt-get -y install puppet-common')
+        # get rid of missing hiera file warning
+        if not exists('/etc/puppet/hiera.yaml'):
+            sudo('touch /etc/puppet/hiera.yaml')
+
 
         sudo('puppet module install puppetlabs-stdlib --version 4.3.2 --force')
         sudo('puppet module install puppetlabs-vcsrepo --version 1.1.0 --force')
