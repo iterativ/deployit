@@ -15,6 +15,7 @@ from datetime import datetime
 import os
 from fabric.contrib.files import exists
 
+
 class BaseService(object):
     files = []
     deamons = []
@@ -83,6 +84,7 @@ class EnvStatusService(BaseService):
         env.envStatusGitChecksum = local('git rev-parse HEAD', capture=True)
         env.envStatusLastCommitDate = local('git log -1 --format=%cd', capture=True)
         super(EnvStatusService, self).deploy()
+
 
 class NewReclicService(BaseService):
     newrelic_ini = os.path.join('%(deploy_folder)s/%(project_name)s/%(env_name)s/newrelic.ini')
