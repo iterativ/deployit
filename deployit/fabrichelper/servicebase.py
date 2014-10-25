@@ -18,7 +18,7 @@ import os
 class BaseService(object):
     files = []
     deamons = []
-    
+
     def __init__(self):
         for f in self.files:
             dest = f['destination'] % env
@@ -28,36 +28,39 @@ class BaseService(object):
 
     def _env_to_dict(self, adict):
         for k, v in adict.items():
-            adict[k] = v % env 
-        return adict        
-    
+            adict[k] = v % env
+        return adict
+
     def get_extra_context(self):
         return {}
-    
+
+    def virtualenv(self, command):
+        sudo("source %s/bin/activate && %s" % (env.remote_app_path_virtualenv, command))
+
     def deploy(self):
         context = env.copy()
         context.update(self.get_extra_context())
-                
+
         for f in self.files:
             context_file = context.copy()
-            
+
             if 'extra_context' in f:
                 context_file.update(f['extra_context'])
 
             template_dir = context_file['global_template_dir']
             if f.get('template_dir'):
                 template_dir = f['template_dir']
-            
-            upload_template(f['filename'], 
-                            f['destination'], 
-                            context=context_file, 
-                            backup=False, 
+
+            upload_template(f['filename'],
+                            f['destination'],
+                            context=context_file,
+                            backup=False,
                             use_jinja=True,
                             use_sudo=True,
                             template_dir=template_dir)
         for f in self.deamons:
             sudo('chmod +x %s' % f % env)
-    
+
     def restart(self):
         for f in self.deamons:
             sudo('%s restart' % f % env)
@@ -83,19 +86,27 @@ class EnvStatusService(BaseService):
 
 
 class NewReclicService(BaseService):
-    files = [{'filename': 'newrelic.ini',
-              'destination': os.path.join('%(deploy_folder)s/%(project_name)s/%(env_name)s', 'newrelic.ini')}, ]
+    newrelic_ini = os.path.join('%(deploy_folder)s/%(project_name)s/%(env_name)s/newrelic.ini')
+    newrelic_list = "/etc/apt/sources.list.d/newrelic.list"
 
     def deploy(self):
         super(NewReclicService, self).deploy()
-        sudo('wget -O /etc/apt/sources.list.d/newrelic.list http://download.newrelic.com/debian/newrelic.list')
-        sudo('apt-key adv --keyserver hkp://subkeys.pgp.net --recv-keys 548C16BF')
-        sudo('apt-get update')
-        sudo('apt-get install newrelic-sysmond')
 
-    def restart(self):        
+        if not exists(self.newrelic_list):
+            sudo('echo deb http://apt.newrelic.com/debian/ newrelic non-free >> %s' % self.newrelic_list)
+            sudo('wget -O- https://download.newrelic.com/548C16BF.gpg | apt-key add -')
+            sudo('apt-get update')
+            sudo('apt-get install newrelic-sysmond')
+
+        local_ini_path = self.newrelic_ini % env
+        if not exists(local_ini_path):
+            env['local_ini_path'] = local_ini_path
+            self.virtualenv('newrelic-admin generate-config %(newrelic_key)s %(local_ini_path)s' % env)
+
+
+    def restart(self):
         sudo('nrsysmond-config --set license_key=%(newrelic_key)s' % env)
-        sudo('/etc/init.d/newrelic-sysmond start')
+        sudo('/etc/init.d/newrelic-sysmond restart')
 
 
 class UwsgiService(BaseService):
