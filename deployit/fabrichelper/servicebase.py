@@ -12,6 +12,7 @@ from fabric.api import *
 from fabric.contrib.project import *
 from fabric.contrib.files import upload_template
 from datetime import datetime
+from fabric.contrib.files import exists, sed
 import os
 
 
@@ -92,17 +93,15 @@ class NewReclicService(BaseService):
     def deploy(self):
         super(NewReclicService, self).deploy()
 
-        if not exists(self.newrelic_list):
-            sudo('echo deb http://apt.newrelic.com/debian/ newrelic non-free >> %s' % self.newrelic_list)
-            sudo('wget -O- https://download.newrelic.com/548C16BF.gpg | apt-key add -')
-            sudo('apt-get update')
-            sudo('apt-get install newrelic-sysmond')
+        sudo('echo deb http://apt.newrelic.com/debian/ newrelic non-free >> %s' % self.newrelic_list)
+        sudo('wget -O- https://download.newrelic.com/548C16BF.gpg | apt-key add -')
+        sudo('apt-get update')
+        sudo('apt-get install newrelic-sysmond')
 
         local_ini_path = self.newrelic_ini % env
-        if not exists(local_ini_path):
-            env['local_ini_path'] = local_ini_path
-            self.virtualenv('newrelic-admin generate-config %(newrelic_key)s %(local_ini_path)s' % env)
-
+        env['local_ini_path'] = local_ini_path
+        self.virtualenv('newrelic-admin generate-config %(newrelic_key)s %(local_ini_path)s' % env)
+        sed(local_ini_path, "Python Application", "%(project_name)s-%(env_name)s" % env, use_sudo=True)
 
     def restart(self):
         sudo('nrsysmond-config --set license_key=%(newrelic_key)s' % env)
