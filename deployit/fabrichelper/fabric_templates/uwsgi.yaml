@@ -6,7 +6,7 @@ uwsgi:
     pythonpath: {{ deploy_folder }}/{{ project_name }}/{{ env_name }}
     chdir: {{ deploy_folder }}/{{ project_name }}/{{ env_name }}/{{ project_name }}
     env: DJANGO_SETTINGS_MODULE={{ settings_module }}
-    env: LANG={{ env_encoding|default:"en_US.UTF-8" }}
+    env: LANG={{ env_encoding|default("en_US.UTF-8") }}
     processes: {{ uwsgi_count }}
     threads: {{ uwsgi_count }}
     logto: {{ deploy_folder }}/{{ project_name }}/{{ env_name }}/log/uwsgi_{{ project_name }}_{{ env_name }}.log
