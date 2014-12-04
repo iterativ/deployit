@@ -351,6 +351,18 @@ class DeploySSLCerts(BaseTask):
             print 'ERROR: Path not found ' + path
 
 
+class ManagePy(BaseTask):
+    """
+    Run djagno manage command Usage: fab <env> manage:<command>
+    """
+    name = "manage"
+
+    @calc_duration
+    def run(self, command_name=''):
+        with cd(env.remote_path()):
+            self.virtualenv('python -u manage.py %s' % (command_name, ))
+
+
 class ResetLoad(BaseTask):
     """
     Reset database
