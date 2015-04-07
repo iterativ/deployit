@@ -48,8 +48,8 @@ for scheme in INSTALL_SCHEMES.values():
 
 setup(
     name='deployit',
-    version='0.6.3',
-    description="Base web app",
+    version='0.6.4',
+    description="Iterativ GmbH DeployIt",
     author='Daniel Egger',
     author_email='daniel.egger@iterativ.ch',
     url='iterativ.ch',
