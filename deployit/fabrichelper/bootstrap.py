@@ -54,6 +54,7 @@ class PuppetBaseTask(Task):
         sudo('puppet module install puppetlabs-nodejs --version 0.6.1 --force')
 
         sudo('puppet module install jamtur01-httpauth --version 0.0.3 --force')
+        sudo('puppet module install thias-postfix --version 0.3.3 --force')
 
         #sudo('puppet module install jfryman-nginx --version 0.0.10 --force')
 
