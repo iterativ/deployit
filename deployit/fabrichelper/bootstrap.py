@@ -44,7 +44,7 @@ class PuppetBaseTask(Task):
         sudo('puppet module install puppetlabs-ntp --version 3.1.2 --force')
         sudo('puppet module install saz-timezone --version 3.1.1 --force')
         sudo('puppet module install puppetlabs-postgresql --version 3.4.2 --force')
-        sudo('puppet module install puppetlabs-mysql --version 2.3.1 --force')
+        sudo('puppet module install puppetlabs-mysql --version 3.3.0 --force')
         sudo('puppet module install puppetlabs-inifile --version 1.1.3 --force')
 
         sudo('puppet module install puppetlabs-rabbitmq --version 4.1.0 --force')
