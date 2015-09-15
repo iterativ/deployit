@@ -15,7 +15,7 @@ uwsgi:
     single-interpreter: True
     module: {{ project_name }}.wsgi:application
     {%- else -%}
-    module: django.core.handlers.wsgi:WSGIHandler()
+    module: django.core.wsgi:get_wsgi_application()
     {%- endif %}
     {% if debug -%}
     enable-threads: True
