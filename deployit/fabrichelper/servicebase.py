@@ -115,6 +115,7 @@ class UwsgiService(BaseService):
               'destination': '/etc/init/uwsgiemperor.conf'}, ]
 
     def deploy(self):
+        sudo('sudo pip install uWSGI==1.4.10')
         sudo('mkdir /etc/uwsgi/apps-enabled -p')
         super(UwsgiService, self).deploy()
 
