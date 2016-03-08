@@ -57,7 +57,7 @@ class PuppetBaseTask(Task):
         sudo('puppet module install thias-postfix --version 0.3.3 --force')
         sudo('puppet module install puppetlabs-apache --version 1.4.0 --force')
         
-        sudo('puppet module install elasticsearch-elasticsearch --version 0.10.3 --force')
+        #sudo('puppet module install elasticsearch-elasticsearch --version 0.10.3 --force')
 
         #sudo('puppet module install jfryman-nginx --version 0.0.10 --force')
 
