@@ -1,5 +1,4 @@
 uwsgi:
-    plugin: python
     uid: www-data
     gid: www-data
     socket: /tmp/uwsgi_{{ env_name }}_{{ project_name }}.sock
