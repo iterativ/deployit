@@ -38,7 +38,7 @@ class PuppetBaseTask(Task):
         sudo('puppet module install puppetlabs-stdlib --version 4.3.2 --force')
         sudo('puppet module install puppetlabs-vcsrepo --version 1.1.0 --force')
         sudo('puppet module install puppetlabs-concat --version 1.0.4 --force')
-        sudo('puppet module install puppetlabs-apt --version 1.6.0 --force')
+        sudo('puppet module install puppetlabs-apt --version 2.2.2 --force')
         sudo('puppet module install puppetlabs-firewall --version 1.1.3 --force')
         sudo('puppet module install attachmentgenie-ufw --version 1.4.9 --force')
         sudo('puppet module install puppetlabs-ntp --version 3.1.2 --force')
