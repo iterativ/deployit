@@ -47,7 +47,7 @@ class PuppetBaseTask(Task):
         sudo('puppet module install puppetlabs-mysql --version 3.3.0 --force')
         sudo('puppet module install puppetlabs-inifile --version 1.1.3 --force')
 
-        sudo('puppet module install puppetlabs-rabbitmq --version 4.1.0 --force')
+        sudo('puppet module install puppetlabs-rabbitmq --version 5.4.0 --force')
         sudo('puppet module install puppetlabs-mongodb --version 0.8.0 --force')
         sudo('puppet module install puppetlabs-haproxy --version 1.0.0 --force')
         sudo('puppet module install puppetlabs-ruby --version 0.2.1 --force')
@@ -56,10 +56,10 @@ class PuppetBaseTask(Task):
         sudo('puppet module install jamtur01-httpauth --version 0.0.3 --force')
         sudo('puppet module install thias-postfix --version 0.3.3 --force')
         sudo('puppet module install puppetlabs-apache --version 1.4.0 --force')
-        
+
         sudo('puppet module install petems-swap_file --version 2.2.2 --force')
 
-        
+
         #sudo('puppet module install elasticsearch-elasticsearch --version 0.10.3 --force')
 
         #sudo('puppet module install jfryman-nginx --version 0.0.10 --force')
@@ -68,7 +68,7 @@ class PuppetBaseTask(Task):
     def clone_modules(self):
         # the hg clone uses the ssh method which requires a correct certificate
         if exists(env.puppet_temp_dir):
-            sudo('rm -rf %s' % env.puppet_temp_dir)    
+            sudo('rm -rf %s' % env.puppet_temp_dir)
         sudo('git clone git://github.com/iterativ/puppet-modules.git {0}'.format(env.puppet_temp_dir))
         self.update_modules()
 
