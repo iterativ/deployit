@@ -57,8 +57,8 @@ setup(
     data_files=data_files,
     zip_safe=False,
     install_requires=[
-        'Fabric>=1.5',
-        'Jinja2==2.6',
-        'python-dateutil>=2.2',
+        'Fabric==1.12.0',
+        'Jinja2==2.8',
+        'python-dateutil==2.5.3',
     ]
 )

@@ -21,7 +21,7 @@ class PuppetBaseTask(Task):
 
     def base_install(self):
         # set locale
-        sudo('export LANGUAGE=en_US.UTF-8 && export LANG=en_US.UTF-8 && export LC_ALL=en_US.UTF-8 && LC_CTYPE=en_US.UTF-8 && locale-gen en_US.UTF-8 && dpkg-reconfigure locales')
+        sudo('export LANGUAGE=en_US.UTF-8 && export LANG=en_US.UTF-8 && export LC_ALL=en_US.UTF-8 && LC_CTYPE=en_US.UTF-8 && locale-gen en_US.UTF-8 && locale-gen --purge en_US.UTF-8')
 
         # set UTF-8 locale for future connections
         sudo('rm -f /etc/default/locale')
@@ -49,13 +49,15 @@ class PuppetBaseTask(Task):
         sudo('puppet module install puppetlabs-mongodb --version 0.14.0 --force')
         sudo('puppet module install puppetlabs-haproxy --version 1.5.0 --force')
         sudo('puppet module install puppetlabs-ruby --version 0.5.0 --force')
-        sudo('puppet module install puppetlabs-nodejs --version 2.0.1 --force')
+        sudo('puppet module install puppet-nodejs --version 2.0.1 --force')
 
         sudo('puppet module install jamtur01-httpauth --version 0.0.3 --force')
         sudo('puppet module install thias-postfix --version 0.3.4 --force')
         sudo('puppet module install puppetlabs-apache --version 1.10.0 --force')
 
         sudo('puppet module install petems-swap_file --version 3.0.2 --force')
+
+        sudo('puppet module install tmont-rethinkdb --version 0.1.0 --force')
 
 
         #sudo('puppet module install elasticsearch-elasticsearch --version 0.10.3 --force')
