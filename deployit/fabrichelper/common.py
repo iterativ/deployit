@@ -37,6 +37,9 @@ update_system = UpdateSystem()
 roottoadmin = RootToAdmin()
 loadbackup = LoadBackup()
 
+letsencrypt_create_certificate = LetsEncryptCreateCertificate()
+letsencrypt_renew_certificates = LetsEncryptRenewCertificates()
+
 # dns_create_standard_domain = DNSCreateNewStandardDomain()
 # dns_add_cname_subdomain = DNSAddCNAMESubdomain()
 # dns_migrate_domain_to_new_ip_address = DNSMigrateDomainToNewIPAddress()

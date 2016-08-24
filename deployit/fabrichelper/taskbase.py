@@ -488,3 +488,25 @@ class LoadBackup(BaseTask):
             get(backup_remote_path, env.backup_local_path)
 
         local('python %(local_src)s/manage.py loaddump --dump_path=%(backup_local_path)s' % env)
+
+
+class LetsEncryptCreateCertificate(BaseTask):
+    name = 'letsencrypt_create_certificate'
+
+    @calc_duration
+    def run(self):
+        # create a certificate for the first entry in server_names
+        sudo('letsencrypt certonly --email=info@iterativ.ch --agree-tos -a webroot --webroot-path=/tmp/letsencrypt-auto -d %s' % env.server_names[0])
+
+
+class LetsEncryptRenewCertificates(BaseTask):
+    name = 'letsencrypt_renew_certificates'
+
+    @calc_duration
+    def run(self, force=False):
+        command = 'letsencrypt renew'
+
+        if force:
+            command += ' --force'
+
+        sudo(command)
