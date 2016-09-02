@@ -45,7 +45,7 @@ class PuppetBaseTask(Task):
         sudo('puppet module install puppetlabs-mysql --version 3.8.0 --force')
         sudo('puppet module install puppetlabs-inifile --version 1.5.0 --force')
 
-        sudo('puppet module install puppetlabs-rabbitmq --version 5.4.0 --force')
+        sudo('puppet module install puppetlabs-rabbitmq --version 5.5.0 --force')
         sudo('puppet module install puppetlabs-mongodb --version 0.14.0 --force')
         sudo('puppet module install puppetlabs-haproxy --version 1.5.0 --force')
         sudo('puppet module install puppetlabs-ruby --version 0.5.0 --force')
