@@ -35,7 +35,7 @@ class PuppetBaseTask(Task):
             sudo('touch /etc/puppet/hiera.yaml')
 
 
-        sudo('puppet module install puppetlabs-stdlib --version 4.3.2 --force')
+        sudo('puppet module install puppetlabs-stdlib --version 4.12.0 --force')
         sudo('puppet module install puppetlabs-vcsrepo --version 1.1.0 --force')
         sudo('puppet module install puppetlabs-concat --version 1.0.4 --force')
         sudo('puppet module install puppetlabs-apt --version 2.2.2 --force')
