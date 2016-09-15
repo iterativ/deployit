@@ -47,7 +47,7 @@ class PuppetBaseTask(Task):
         sudo('puppet module install puppetlabs-mysql --version 3.3.0 --force')
         sudo('puppet module install puppetlabs-inifile --version 1.1.3 --force')
 
-        sudo('puppet module install puppetlabs-rabbitmq --version 5.4.0 --force')
+        sudo('puppet module install puppetlabs-rabbitmq --version 5.5.0 --force')
         sudo('puppet module install puppetlabs-mongodb --version 0.8.0 --force')
         sudo('puppet module install puppetlabs-haproxy --version 1.0.0 --force')
         sudo('puppet module install puppetlabs-ruby --version 0.2.1 --force')
@@ -102,7 +102,7 @@ class PuppetBaseTask(Task):
 
         with cd(env_dir):
             sudo('puppet apply %s' % env.environment_manifest)
-    
+
     def update_upgrade(self):
         sudo('apt-get update -y')
         # do not update grup as it requires manual intervention
@@ -178,39 +178,39 @@ class UpdateSystem(PuppetBaseTask):
 class RootToAdmin(Task):
     """
     Disable Root Login and create a new custom admin user with his own ssh key
-    
+
     Run this command as priveleged user as it creates the new admin user (and disables root)
     e.g.: fab cloudsigma roottoguru:root
-    
+
     Run other commands:
         fab vagrant taillog  -i /Users/user/.ssh/host.pem
-    
+
     or put in your ~/.ssh/config:
         Host=192.168.33.11
         HostName=192.168.33.11
         User=newadmin #same as in your env python file
         IdentityFile=/Users/user/.ssh/host.pem
-    
+
     """
     name = "roottoadmin"
-    
+
     @warning
     @calc_duration
     def run(self, user):
         evn_user_old = env.user
         env.user = user
-        
+
         path = os.path.expanduser(os.path.join('~/Desktop/', env.env_name))
         keys_path = '/home/%s/.ssh/' % evn_user_old
-        authorized_keys = os.path.join(keys_path, 'authorized_keys')        
+        authorized_keys = os.path.join(keys_path, 'authorized_keys')
         local_user_pp = env.env_path('user.pp')
-        tmp_path = '/home/%s/id_rsa.pup' % evn_user_old 
+        tmp_path = '/home/%s/id_rsa.pup' % evn_user_old
         pem_path = '%s.pem' % path
-        
+
         if not os.path.exists(local_user_pp):
             print '\nNo %s found. Exit.\n' % local_user_pp
             return 1
-        
+
         print 'Run command as %s...' % env.user
 
         put(local_user_pp, 'user.pp', use_sudo=True)
@@ -219,18 +219,18 @@ class RootToAdmin(Task):
         if os.path.exists(pem_path):
             warn('\x1b[5;31m%s\x1b[0;39m already exists.' % (pem_path))
             prompt("Enter 'c' to overwrite", validate=r'c$')
-      
+
         local('ssh-keygen -t rsa -f %s' % path)
         local('mv %s %s' % (path, pem_path))
 
         if not exists(keys_path):
             sudo('mkdir -p %s' % keys_path)
-        
+
         put(path+'.pub', tmp_path, use_sudo=True)
-        
+
         sudo('cat %s >> %s'% (tmp_path, authorized_keys))
         sudo('rm %s' % tmp_path)
-        
+
         sudo('chown -R %(user)s:%(user)s %(path)s' % {'user': evn_user_old, 'path': keys_path})
         env.user = evn_user_old
         print '\n\x1b[32mATTENTION: Please backup new private Key %s.pem \x1b[0;39m\n' % path
