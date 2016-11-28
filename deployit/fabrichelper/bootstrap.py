@@ -21,7 +21,7 @@ class PuppetBaseTask(Task):
 
     def base_install(self):
         # set locale
-        sudo('export LANGUAGE=en_US.UTF-8 && export LANG=en_US.UTF-8 && export LC_ALL=en_US.UTF-8 && LC_CTYPE=en_US.UTF-8 && locale-gen en_US.UTF-8 && locale-gen --purge en_US.UTF-8')
+        sudo('locale-gen --purge en_US.UTF-8')
 
         # set UTF-8 locale for future connections
         sudo('rm -f /etc/default/locale')

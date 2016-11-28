@@ -8,9 +8,9 @@
 # Created on Jul 02, 2012
 # @author: DanEEStar <daniel.egger@gmail.com>
 
-from distutils.core import setup
 import os
 from distutils.command.install import INSTALL_SCHEMES
+from distutils.core import setup
 
 packages = []
 data_files = []
@@ -48,7 +48,7 @@ for scheme in INSTALL_SCHEMES.values():
 
 setup(
     name='deployit',
-    version='16.0.1',
+    version='16.0.2',
     description="Iterativ GmbH DeployIt",
     author='Daniel Egger',
     author_email='daniel.egger@iterativ.ch',
