@@ -78,7 +78,7 @@ class EnvStatusService(BaseService):
               'destination': '%(deploy_folder)s/%(project_name)s/%(env_name)s/%(project_name)s/static/envstatus.json'}, ]
 
     def deploy(self):
-        # TODO: this will only work with git. 
+        # TODO: this will only work with git.
         env.envStatusLastDeployment = datetime.now().__str__()
         env.envStatusGitBranch = local("git rev-parse --abbrev-ref HEAD", capture=True)
         env.envStatusGitChecksum = local('git rev-parse HEAD', capture=True)
@@ -115,7 +115,7 @@ class UwsgiService(BaseService):
               'destination': '/etc/init/uwsgiemperor.conf'}, ]
 
     def deploy(self):
-        sudo('sudo pip install uWSGI==1.4.10')
+        sudo('sudo pip install uWSGI==2.0.14')
         sudo('mkdir /etc/uwsgi/apps-enabled -p')
         super(UwsgiService, self).deploy()
 

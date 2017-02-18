@@ -29,6 +29,8 @@ class PuppetBaseTask(Task):
 
         sudo('apt-get -y install git')
         sudo('apt-get -y install puppet-common')
+        sudo('apt-get -y install upstart')
+        sudo('apt-get -y install upstart-sysv')
         # get rid of missing hiera file warning
         if not exists('/etc/puppet/hiera.yaml'):
             sudo('touch /etc/puppet/hiera.yaml')
@@ -42,7 +44,7 @@ class PuppetBaseTask(Task):
         sudo('puppet module install puppetlabs-ntp --version 4.2.0 --force')
         sudo('puppet module install saz-timezone --version 3.3.0 --force')
         sudo('puppet module install puppetlabs-postgresql --version 4.8.0 --force')
-        sudo('puppet module install puppetlabs-mysql --version 3.8.0 --force')
+        sudo('puppet module install puppetlabs-mysql --version 3.10.0 --force')
         sudo('puppet module install puppetlabs-inifile --version 1.5.0 --force')
 
         sudo('puppet module install puppetlabs-rabbitmq --version 5.5.0 --force')
