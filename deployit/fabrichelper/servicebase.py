@@ -120,7 +120,7 @@ class UwsgiService(BaseService):
         super(UwsgiService, self).deploy()
 
     def restart(self):
-        sudo('systemctl start uwsgi || systemctl restart uwsgi')
+        sudo('systemctl stop uwsgi || systemctl start uwsgi')
 
 
 class CeleryService(BaseService):

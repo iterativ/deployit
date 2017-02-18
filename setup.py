@@ -48,7 +48,7 @@ for scheme in INSTALL_SCHEMES.values():
 
 setup(
     name='deployit',
-    version='16.0.4',
+    version='16.0.5',
     description="Iterativ GmbH DeployIt",
     author='Daniel Egger',
     author_email='daniel.egger@iterativ.ch',

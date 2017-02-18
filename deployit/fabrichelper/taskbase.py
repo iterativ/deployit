@@ -312,8 +312,8 @@ class VagrantDeploy(Deploy):
 
 
 class DeployServices(BaseTask):
-    """ 
-    Deploy all services necessary to run this project 
+    """
+    Deploy all services necessary to run this project
     """
     name = "services_deploy"
 
@@ -323,32 +323,14 @@ class DeployServices(BaseTask):
 
 
 class RestartServices(BaseTask):
-    """ 
-    Restart all services necessary to run this project 
+    """
+    Restart all services necessary to run this project
     """
     name = "services_restart"
 
     @calc_duration
     def run(self):
         self.restart_services()
-
-
-class DeploySSLCerts(BaseTask):
-    """ 
-    Deploy the given SSL Certs. 
-    """
-    name = "deploy_sslcerts"
-
-    @calc_duration
-    def run(self, path):
-        if os.path.exists(path):
-            print 'Upload certs from %s ...' % path
-            put(os.path.join(path, '*.pem'), '/etc/ssl/certs/%s.pem' % env.ssl_cert, use_sudo=True)
-            put(os.path.join(path, '*.key'), '/etc/ssl/private/%s.key' % env.ssl_cert, use_sudo=True)
-            self.restart_services()
-
-        else:
-            print 'ERROR: Path not found ' + path
 
 
 class ManagePy(BaseTask):
