@@ -478,7 +478,7 @@ class LetsEncryptCreateCertificate(BaseTask):
     @calc_duration
     def run(self):
         # create a certificate for the first entry in server_names
-        sudo('letsencrypt certonly --email=info@iterativ.ch --agree-tos -a webroot --webroot-path=/tmp/letsencrypt-auto -d %s' % env.server_names[0])
+        sudo('letsencrypt certonly --email={} --agree-tos -a webroot --webroot-path=/tmp/letsencrypt-auto -d {}'.format(env.ssl_email, env.server_names[0]))
 
 
 class LetsEncryptRenewCertificates(BaseTask):

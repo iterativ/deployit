@@ -14,9 +14,9 @@ from fabric.tasks import Task
 
 
 class EnvTask(Task):
-            
+
     def __init__(self, *args, **kwargs):
-        super(EnvTask, self).__init__(*args, **kwargs)        
+        super(EnvTask, self).__init__(*args, **kwargs)
         # monkey patch run task to execute env calculations
         self.__run = self.run
         self.run = self._run_wrapper
@@ -53,6 +53,7 @@ class EnvTask(Task):
         env.python_version = '2.7'
         env.service_dir = '/etc/init.d/'
         env.backup_remote_path = '/var/backups/postgres/pgbackup/'
+        env.ssl_email = 'info@iterativ.ch'
         # settings for puppet
         env.puppet_temp_dir = '~/puppettmp/'
         env.puppet_dir = '~/puppet/'
@@ -74,7 +75,7 @@ class EnvTask(Task):
             'env_name': env.env_name
         }
         env.remote_app_path_virtualenv = os.path.join(env.remote_app_path, env.project_name + "-env")
-        env.local_app = env.local_path('src', env.project_name)   
+        env.local_app = env.local_path('src', env.project_name)
         env.local_src = env.local_path('src')
         env.local_static_root = env.local_path(env.local_app, 'static')
 
