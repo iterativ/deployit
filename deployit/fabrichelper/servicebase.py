@@ -111,8 +111,8 @@ class NewReclicService(BaseService):
 class UwsgiService(BaseService):
     files = [{'filename': 'uwsgi.yaml',
               'destination': '%(uwsgi_conf)s/%(env_name)s.%(project_name)s.yaml'},
-             {'filename': 'uwsgiemperor.conf',
-              'destination': '/etc/init/uwsgiemperor.conf'}, ]
+             {'filename': 'uwsgi.service.conf',
+              'destination': '/etc/systemd/system/uwsgi.service'}, ]
 
     def deploy(self):
         sudo('sudo pip install uWSGI==2.0.14')
@@ -120,8 +120,7 @@ class UwsgiService(BaseService):
         super(UwsgiService, self).deploy()
 
     def restart(self):
-        #sudo('sudo stop uwsgiemperor')
-        sudo('initctl start uwsgiemperor || initctl restart uwsgiemperor')
+        sudo('systemctl start uwsgi || systemctl restart uwsgi')
 
 
 class CeleryService(BaseService):
@@ -148,8 +147,8 @@ class PhpNginxService(BaseService):
 class FlaskUwsgiService(UwsgiService):
     files = [{'filename': 'flask_uwsgi.yaml',
               'destination': '%(uwsgi_conf)s/%(env_name)s.%(project_name)s.yaml'},
-             {'filename': 'uwsgiemperor.conf',
-              'destination': '/etc/init/uwsgiemperor.conf'}, ]
+             {'filename': 'uwsgi.service.conf',
+              'destination': '/etc/systemd/system/uwsgi.service'}, ]
 
 
 class FlaskNginxService(NginxService):
