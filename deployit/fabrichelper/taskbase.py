@@ -7,23 +7,20 @@
 #
 # Created on Jul 02, 2012
 # @author: paweloque <paweloque@gmail.com>
-import tempfile
-
-from fabric.api import *
-from fabric.contrib.console import confirm
-from fabric.contrib.project import *
-from fabric.contrib.files import exists
-from .servicebase import *
-from fabric.api import env
 import datetime
-import time
-from fabric.tasks import Task
-import xmlrpclib
-import pip
-from itertools import izip_longest
 import shutil
-from .decorators import warning, calc_duration
+import tempfile
+import time
 import urllib
+import xmlrpclib
+from itertools import izip_longest
+
+import pip
+from fabric.contrib.console import confirm
+from fabric.tasks import Task
+
+from .decorators import warning, calc_duration
+from .servicebase import *
 
 
 class BaseTask(Task):
@@ -467,7 +464,16 @@ class LoadBackup(BaseTask):
                 'Use existing backup (from %s)?' % time.ctime(os.path.getctime(env.backup_local_path)))
 
         if not use_existing:
-            get(backup_remote_path, env.backup_local_path)
+            backup_remote_tar_filepath = backup_remote_path + '.tar.gz'
+            backup_local_tar_filepath = env.backup_local_path + '.tar.gz'
+
+            if not exists(backup_remote_tar_filepath, use_sudo=True):
+                backup_remote_dir, backup_remote_file_basename = os.path.split(backup_remote_path)
+                tar_command = 'tar -C {} -czf {} {}'.format(backup_remote_dir, backup_remote_tar_filepath, backup_remote_file_basename)
+                sudo(tar_command)
+
+            get(backup_remote_tar_filepath, backup_local_tar_filepath)
+            local('tar -xf {} -C {}'.format(backup_local_tar_filepath, os.path.dirname(backup_local_tar_filepath)))
 
         local('python %(local_src)s/manage.py loaddump --dump_path=%(backup_local_path)s' % env)
 
