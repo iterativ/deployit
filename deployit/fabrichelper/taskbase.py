@@ -42,7 +42,9 @@ class BaseTask(Task):
     def managepy(self, command):
         self.virtualenv('python -u %s/manage.py %s' % (env.remote_path(), command))
 
-    def adjust_rights(self, user=env.www_server_uid):
+    def adjust_rights(self, user=None):
+        if user is None:
+            user=env.www_server_uid
         sudo("chown -R {user}:{user} {remote_app_path}".format(user=user, remote_app_path=env.remote_app_path))
 
     def clear_pycs(self):
