@@ -7,7 +7,6 @@
 #
 # Created on Jul 02, 2012
 # @author: paweloque <paweloque@gmail.com>
-
 from fabric.api import *
 from fabric.contrib.project import *
 from fabric.contrib.files import upload_template

@@ -7,10 +7,8 @@
 #
 # Created on Jul 02, 2012
 # @author: maersu <me@maersu.ch>
-
 from .taskbase import *
 from .bootstrap import *
-#from .dnstasks import *
 from fabric.tasks import Task
 
 checkforupdates = CheckForUpdates()
@@ -38,12 +36,6 @@ loadbackup = LoadBackup()
 
 letsencrypt_create_certificate = LetsEncryptCreateCertificate()
 letsencrypt_renew_certificates = LetsEncryptRenewCertificates()
-
-# dns_create_standard_domain = DNSCreateNewStandardDomain()
-# dns_add_cname_subdomain = DNSAddCNAMESubdomain()
-# dns_migrate_domain_to_new_ip_address = DNSMigrateDomainToNewIPAddress()
-# dns_delete_record_from_domain = DNSDeleteRecordFromDomain()
-# dns_add_record_subdomain = DNSAddRecordSubdomain()
 
 
 class BootstrapVagrantTask(Task):

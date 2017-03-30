@@ -33,18 +33,17 @@ class BaseTask(Task):
 
     def ensure_virtualenv(self):
         if not exists(env.remote_app_path_virtualenv):
-            sudo(
-                "%(remote_virtualenv_py)s --no-site-packages --python=python%(python_version)s %(remote_app_path_virtualenv)s" % env)
+            sudo("%(remote_virtualenv_py)s --no-site-packages --python=python%(python_version)s %(remote_app_path_virtualenv)s" % env)
 
     def virtualenv(self, command):
         sudo("source %s/bin/activate && %s" % (env.remote_app_path_virtualenv, command))
 
     def managepy(self, command):
-        self.virtualenv('python -u %s/manage.py %s' % (env.remote_path(), command))
+        self.virtualenv('python3 -u %s/manage.py %s' % (env.remote_path(), command))
 
     def adjust_rights(self, user=None):
         if user is None:
-            user=env.www_server_uid
+            user = env.www_server_uid
         sudo("chown -R {user}:{user} {remote_app_path}".format(user=user, remote_app_path=env.remote_app_path))
 
     def clear_pycs(self):
@@ -54,19 +53,19 @@ class BaseTask(Task):
             pass
 
     def load_site(self, ahost):
-        print 'Load %s ...' % ahost
+        print('Load {} ...'.format(ahost))
         try:
             f = urllib.urlopen(ahost)
             f.read()
             http_code = f.getcode()
             msg = 'HTTP status code: %s' % http_code
             if http_code != 200:
-                print 'ERROR %s' % msg
+                print('ERROR {}'.format(msg))
             else:
-                print msg
+                print(msg)
             return http_code
-        except Exception, e:
-            print 'EXCEPTION: Could not load site: %s' % (e)
+        except Exception as e:
+            print('EXCEPTION: Could not load site: {}'.format(e))
 
     def update_packages(self, pip_filename='requirements.txt'):
         self.adjust_rights('root')
@@ -93,7 +92,7 @@ class Deploy(BaseTask):
     update_libs = True
 
     def deploy_static(self):
-        local('python %(local_src)s/manage.py collectstatic --noinput' % env)
+        local('python3 %(local_src)s/manage.py collectstatic --noinput' % env)
         rsync_project(
             remote_dir=env.remote_path(env.project_name),
             local_dir=env.local_static_root,
@@ -341,7 +340,7 @@ class ManagePy(BaseTask):
     @calc_duration
     def run(self, command_name=''):
         with cd(env.remote_path()):
-            self.virtualenv('python -u manage.py %s' % (command_name, ))
+            self.virtualenv('python3 -u manage.py %s' % (command_name, ))
 
 
 class ResetLoad(BaseTask):
@@ -354,7 +353,7 @@ class ResetLoad(BaseTask):
     @calc_duration
     def run(self, no_input=False):
         with cd(env.remote_path()):
-            self.virtualenv('python -u manage.py resetload')
+            self.virtualenv('python3 -u manage.py resetload')
         self.adjust_rights()
 
 
@@ -367,7 +366,7 @@ class Migrate(BaseTask):
     @calc_duration
     def run(self, args=''):
         with cd(env.remote_path()):
-            self.virtualenv('python -u manage.py migrate %s' % args)
+            self.virtualenv('python3 -u manage.py migrate %s' % args)
 
 
 class TailLog(BaseTask):
@@ -415,7 +414,7 @@ class CheckForUpdates(BaseTask):
     @calc_duration
     def run(self):
         pypi = xmlrpclib.ServerProxy('http://pypi.python.org/pypi')
-        print 'check for updates (local):\n'
+        print('check for updates (local):\n')
         for dist in pip.get_installed_distributions():
             available = pypi.package_releases(dist.project_name)
             if not available:
@@ -430,7 +429,7 @@ class CheckForUpdates(BaseTask):
             else:
                 msg = self.compare_version(dist.version, available[0])
             pkg_info = '{dist.project_name} {dist.version}'.format(dist=dist)
-            print '\t{pkg_info:40} {msg}'.format(pkg_info=pkg_info, msg=msg)
+            print('\t{pkg_info:40} {msg}'.format(pkg_info=pkg_info, msg=msg))
 
 
 class Delete(BaseTask):
@@ -445,8 +444,8 @@ class Delete(BaseTask):
         sudo('rm -rf %(remote_app_path)s' % env)
         # now we have to delete all the files created for the services
         # iterate over services and call their cleanup functions
-        #for service_klass in env.services:
-        #    service = service_klass()
+        # for service_klass in env.services:
+        #     service = service_klass()
 
 
 class LoadBackup(BaseTask):
@@ -462,8 +461,7 @@ class LoadBackup(BaseTask):
 
         use_existing = False
         if os.path.exists(env.backup_local_path):
-            use_existing = confirm(
-                'Use existing backup (from %s)?' % time.ctime(os.path.getctime(env.backup_local_path)))
+            use_existing = confirm('Use existing backup (from %s)?' % time.ctime(os.path.getctime(env.backup_local_path)))
 
         if not use_existing:
             backup_remote_tar_filepath = backup_remote_path + '.tar.gz'
@@ -477,7 +475,7 @@ class LoadBackup(BaseTask):
             get(backup_remote_tar_filepath, backup_local_tar_filepath)
             local('tar -xf {} -C {}'.format(backup_local_tar_filepath, os.path.dirname(backup_local_tar_filepath)))
 
-        local('python %(local_src)s/manage.py loaddump --dump_path=%(backup_local_path)s' % env)
+        local('python3 %(local_src)s/manage.py loaddump --dump_path=%(backup_local_path)s' % env)
 
 
 class LetsEncryptCreateCertificate(BaseTask):

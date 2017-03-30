@@ -7,7 +7,6 @@
 #
 # Created on Jul 02, 2012
 # @author: maersu <me@maersu.ch>
-
 from fabric.api import *
 from fabric.api import env
 import time
@@ -20,6 +19,7 @@ def warning(f):
         f(*args, **kwargs)
     return new_f
 
+
 def production(f):
     def new_f(*args, **kwargs):
         warn('\033[31m Executing task on production environment?\x1b[0;39m')
@@ -27,9 +27,10 @@ def production(f):
         f(*args, **kwargs)
     return new_f
 
+
 def calc_duration(f):
     def new_f(*args, **kwargs):
         t1 = time.time()
         f(*args, **kwargs)
-        print "Command took \x1b[32m%.2fs\x1b[0;39m" % (time.time() - t1)
+        print("Command took \x1b[32m%.2fs\x1b[0;39m" % (time.time() - t1))
     return new_f

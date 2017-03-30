@@ -7,7 +7,6 @@
 #
 # Created on Jul 02, 2012
 # @author: maersu <me@maersu.ch>
-
 from fabric.api import env
 import os
 from fabric.tasks import Task
@@ -50,7 +49,7 @@ class EnvTask(Task):
         env.services = []
         env.requirements_file = "requirements.txt"
         env.remote_virtualenv_py = 'virtualenv'
-        env.python_version = '2.7'
+        env.python_version = '3.5'
         env.service_dir = '/etc/init.d/'
         env.backup_remote_path = '/var/backups/postgres/pgbackup/'
         env.ssl_email = 'info@iterativ.ch'

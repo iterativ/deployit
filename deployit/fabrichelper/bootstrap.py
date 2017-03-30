@@ -7,7 +7,6 @@
 #
 # Created on Jul 02, 2012
 # @author: paweloque <paweloque@gmail.com>
-
 from fabric.api import *
 from fabric.tasks import Task
 from fabric.operations import open_shell, sudo
@@ -31,6 +30,7 @@ class PuppetBaseTask(Task):
         sudo('apt-get -y install puppet-common')
         sudo('apt-get -y install upstart')
         sudo('apt-get -y install upstart-sysv')
+
         # get rid of missing hiera file warning
         if not exists('/etc/puppet/hiera.yaml'):
             sudo('touch /etc/puppet/hiera.yaml')
@@ -61,11 +61,8 @@ class PuppetBaseTask(Task):
 
         sudo('puppet module install tmont-rethinkdb --version 0.1.0 --force')
 
-
         #sudo('puppet module install elasticsearch-elasticsearch --version 0.10.3 --force')
-
         #sudo('puppet module install jfryman-nginx --version 0.0.10 --force')
-
 
     def clone_modules(self):
         # the hg clone uses the ssh method which requires a correct certificate
@@ -119,6 +116,7 @@ class PuppetBaseInstall(PuppetBaseTask):
     Installs all puppet prerequisites and sets new Ubuntu repository locations for some package backports
     """
     name = 'puppet_base_install'
+
     @calc_duration
     def run(self):
         self.base_install()
@@ -132,6 +130,7 @@ class PuppetClone(PuppetBaseTask):
     Clone the git repo with all puppet modules and root manifests
     """
     name = 'puppet_clone'
+
     @calc_duration
     def run(self):
         self.clone_modules()
@@ -142,6 +141,7 @@ class PuppetUpdate(PuppetBaseTask):
     Update puppet modules and root manifests
     """
     name = 'puppet_update'
+
     @calc_duration
     def run(self):
         self.update_modules()
@@ -152,6 +152,7 @@ class PuppetProjectApply(PuppetBaseTask):
     Apply the puppet project manifest
     """
     name = 'puppet_project_apply'
+
     @calc_duration
     def run(self):
         self.puppet_project_apply()
@@ -162,6 +163,7 @@ class PuppetEnvApply(PuppetBaseTask):
     Apply the environment specific manifest
     """
     name = 'puppet_env_apply'
+
     @calc_duration
     def run(self):
         self.puppet_env_apply()
@@ -172,6 +174,7 @@ class UpdateSystem(PuppetBaseTask):
     Installs the newest packes (via update, upgrade). (Does not call sysupgarde)
     """
     name = 'update_system'
+
     @calc_duration
     def run(self):
         self.update_upgrade()
@@ -210,10 +213,10 @@ class RootToAdmin(Task):
         pem_path = '%s.pem' % path
 
         if not os.path.exists(local_user_pp):
-            print '\nNo %s found. Exit.\n' % local_user_pp
+            print('\nNo {} found. Exit.\n'.format(local_user_pp))
             return 1
 
-        print 'Run command as %s...' % env.user
+        print('Run command as {}...'.format(env.user))
 
         put(local_user_pp, 'user.pp', use_sudo=True)
         sudo('puppet apply user.pp')
@@ -235,6 +238,6 @@ class RootToAdmin(Task):
 
         sudo('chown -R %(user)s:%(user)s %(path)s' % {'user': evn_user_old, 'path': keys_path})
         env.user = evn_user_old
-        print '\n\x1b[32mATTENTION: Please backup new private Key %s.pem \x1b[0;39m\n' % path
+        print('\n\x1b[32mATTENTION: Please backup new private Key {}.pem \x1b[0;39m\n'.format(path))
 
 
