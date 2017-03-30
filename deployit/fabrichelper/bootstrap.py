@@ -115,7 +115,7 @@ class PuppetBaseTask(Task):
         # do not update grup as it requires manual intervention
         with settings(warn_only=True):
             sudo('apt-mark hold grub2-common grub-pc grub-pc-bin -qq')
-        sudo('apt-get upgrade -y')
+        sudo('apt-get dist-upgrade -y')
         sudo('apt-get autoremove')
 
 
