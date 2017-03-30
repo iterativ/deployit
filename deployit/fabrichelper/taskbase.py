@@ -35,6 +35,11 @@ class BaseTask(Task):
         if not exists(env.remote_app_path_virtualenv):
             sudo("%(remote_virtualenv_py)s --no-site-packages --python=python%(python_version)s %(remote_app_path_virtualenv)s" % env)
 
+    def ensure_certs(self):
+        all_names = env.server_names + env.alternative_server_names
+        certbot_cmd = 'letsencrypt certonly -d ' + ' -d '.join(all_names)
+        sudo(certbot_cmd)
+
     def virtualenv(self, command):
         sudo("source %s/bin/activate && %s" % (env.remote_app_path_virtualenv, command))
 
@@ -189,6 +194,7 @@ class Deploy(BaseTask):
 
         self.create_project_directories()
 
+        self.ensure_certs()
         self.initialize_virtualenv()
 
         # sources & templates

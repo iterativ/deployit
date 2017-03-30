@@ -7,7 +7,7 @@
 #
 # Created on Jul 02, 2012
 # @author: maersu <me@maersu.ch>
-
+from functools import reduce
 from fabric.api import env
 from fabric.tasks import _execute as _execute_ori
 from fabric.utils import abort
@@ -43,7 +43,7 @@ def _normal_list_pp(docstrings=True):
     from fabric.main import _print_docstring, indent, _task_names
     from .environments import EnvTask
     from fabric import state
-    
+
     result = []
 
     def _pp(names):
@@ -69,13 +69,13 @@ def _normal_list_pp(docstrings=True):
 
     env_task = {}
     commands = {}
-    
+
     for c, instance in state.commands.items():
         if issubclass(instance.__class__, EnvTask):
             env_task[c] = instance
         else:
-            commands[c] = instance    
-    
+            commands[c] = instance
+
     if len(env_task) > 0:
         SECTION = '\033[92m%s\033[0m'
         result.append(SECTION % '[Environments]')
