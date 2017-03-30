@@ -34,13 +34,6 @@ class BaseTask(Task):
         if not exists(env.remote_app_path_virtualenv):
             sudo("%(remote_virtualenv_py)s --no-site-packages --python=python%(python_version)s %(remote_app_path_virtualenv)s" % env)
 
-    def ensure_certs(self):
-        sudo('/etc/init.d/nginx stop')
-        all_names = env.server_names + env.alternative_server_names
-        certbot_cmd = 'letsencrypt certonly --email={} --agree-tos --register-unsafely-without-email -d '.format(env.ssl_email) + ' -d '.join(all_names)
-        sudo(certbot_cmd)
-        sudo('/etc/init.d/nginx start')
-
     def virtualenv(self, command):
         sudo("source %s/bin/activate && %s" % (env.remote_app_path_virtualenv, command))
 
@@ -96,7 +89,6 @@ class Deploy(BaseTask):
     """
     name = "full_deploy"
     update_libs = True
-    generate_certs = True
 
     def deploy_static(self):
         local('python3 %(local_src)s/manage.py collectstatic --noinput' % env)
@@ -196,8 +188,6 @@ class Deploy(BaseTask):
 
         self.create_project_directories()
 
-        if self.generate_certs:
-            self.ensure_certs()
         self.initialize_virtualenv()
 
         # sources & templates
@@ -297,7 +287,6 @@ class FastDeploy(Deploy):
     """
     name = "deploy"
     update_libs = False
-    generate_certs = False
 
 
 class VagrantDeploy(Deploy):
@@ -306,7 +295,6 @@ class VagrantDeploy(Deploy):
     """
     name = "vagrant_deploy"
     update_libs = True
-    generate_certs = False
 
     @calc_duration
     def run(self, no_input=False):
