@@ -31,6 +31,10 @@ class PuppetBaseTask(Task):
         sudo('apt-get -y install upstart')
         sudo('apt-get -y install upstart-sysv')
 
+        # python setup
+        sudo('apt-get -y install python3-pip')
+        sudo('apt-get -y install virtualenv')
+
         # get rid of missing hiera file warning
         if not exists('/etc/puppet/hiera.yaml'):
             sudo('touch /etc/puppet/hiera.yaml')
@@ -58,7 +62,6 @@ class PuppetBaseTask(Task):
         sudo('puppet module install puppetlabs-apache --version 1.10.0 --force')
 
         sudo('puppet module install petems-swap_file --version 3.0.2 --force')
-
         sudo('puppet module install tmont-rethinkdb --version 0.1.0 --force')
 
         #sudo('puppet module install elasticsearch-elasticsearch --version 0.10.3 --force')
@@ -222,7 +225,7 @@ class RootToAdmin(Task):
         sudo('puppet apply user.pp')
 
         if os.path.exists(pem_path):
-            warn('\x1b[5;31m%s\x1b[0;39m already exists.' % (pem_path))
+            warn('\x1b[5;31m%s\x1b[0;39m already exists.' % pem_path)
             prompt("Enter 'c' to overwrite", validate=r'c$')
 
         local('ssh-keygen -t rsa -f %s' % path)
@@ -233,7 +236,7 @@ class RootToAdmin(Task):
 
         put(path+'.pub', tmp_path, use_sudo=True)
 
-        sudo('cat %s >> %s'% (tmp_path, authorized_keys))
+        sudo('cat %s >> %s' % (tmp_path, authorized_keys))
         sudo('rm %s' % tmp_path)
 
         sudo('chown -R %(user)s:%(user)s %(path)s' % {'user': evn_user_old, 'path': keys_path})
