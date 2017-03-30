@@ -11,9 +11,8 @@ import datetime
 import shutil
 import tempfile
 import time
-import urllib
+import urllib.request
 from itertools import zip_longest
-
 
 import pip
 from fabric.contrib.console import confirm
@@ -37,7 +36,7 @@ class BaseTask(Task):
 
     def ensure_certs(self):
         all_names = env.server_names + env.alternative_server_names
-        certbot_cmd = 'letsencrypt certonly -d ' + ' -d '.join(all_names)
+        certbot_cmd = 'letsencrypt certonly --register-unsafely-without-email -d ' + ' -d '.join(all_names)
         sudo(certbot_cmd)
 
     def virtualenv(self, command):
@@ -60,7 +59,7 @@ class BaseTask(Task):
     def load_site(self, ahost):
         print('Load {} ...'.format(ahost))
         try:
-            f = urllib.urlopen(ahost)
+            f = urllib.request.urlopen(ahost)
             f.read()
             http_code = f.getcode()
             msg = 'HTTP status code: %s' % http_code

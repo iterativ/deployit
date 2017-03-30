@@ -56,7 +56,7 @@ def _normal_list_pp(docstrings=True):
             docstring = _print_docstring(docstrings, name)
             if docstring:
                 lines = filter(None, docstring.splitlines())
-                first_line = lines[0].strip()
+                first_line = next(lines).strip()
                 # Truncate it if it's longer than N chars
                 size = 75 - (max_len + len(sep) + len(trail))
                 if len(first_line) > size:
