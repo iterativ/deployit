@@ -35,9 +35,11 @@ class BaseTask(Task):
             sudo("%(remote_virtualenv_py)s --no-site-packages --python=python%(python_version)s %(remote_app_path_virtualenv)s" % env)
 
     def ensure_certs(self):
+        sudo('/etc/init.d/nginx stop')
         all_names = env.server_names + env.alternative_server_names
         certbot_cmd = 'letsencrypt certonly --email={} --agree-tos --register-unsafely-without-email -d '.format(env.ssl_email) + ' -d '.join(all_names)
         sudo(certbot_cmd)
+        sudo('/etc/init.d/nginx stop')
 
     def virtualenv(self, command):
         sudo("source %s/bin/activate && %s" % (env.remote_app_path_virtualenv, command))
@@ -495,12 +497,15 @@ class LetsEncryptCreateCertificate(BaseTask):
     @calc_duration
     def run(self):
         # create a certificate for the first entry in server_names
+
         # TODO: dänu: why only the first entry?
         # sudo('letsencrypt certonly --email={} --agree-tos -a webroot --webroot-path=/tmp/letsencrypt-auto -d {}'.format(env.ssl_email, env.server_names[0]))
 
+        sudo('/etc/init.d/nginx stop')
         all_names = env.server_names + env.alternative_server_names
         certbot_cmd = 'letsencrypt certonly --email={} --agree-tos --register-unsafely-without-email -d '.format(env.ssl_email) + ' -d '.join(all_names)
         sudo(certbot_cmd)
+        sudo('/etc/init.d/nginx stop')
 
 
 class LetsEncryptRenewCertificates(BaseTask):
