@@ -36,7 +36,7 @@ class BaseTask(Task):
 
     def ensure_certs(self):
         all_names = env.server_names + env.alternative_server_names
-        certbot_cmd = 'letsencrypt certonly --register-unsafely-without-email -d ' + ' -d '.join(all_names)
+        certbot_cmd = 'letsencrypt certonly --email={} --agree-tos --register-unsafely-without-email -d '.format(env.ssl_email) + ' -d '.join(all_names)
         sudo(certbot_cmd)
 
     def virtualenv(self, command):
@@ -94,6 +94,7 @@ class Deploy(BaseTask):
     """
     name = "full_deploy"
     update_libs = True
+    generate_certs = True
 
     def deploy_static(self):
         local('python3 %(local_src)s/manage.py collectstatic --noinput' % env)
@@ -193,7 +194,8 @@ class Deploy(BaseTask):
 
         self.create_project_directories()
 
-        self.ensure_certs()
+        if self.generate_certs:
+            self.ensure_certs()
         self.initialize_virtualenv()
 
         # sources & templates
@@ -293,6 +295,7 @@ class FastDeploy(Deploy):
     """
     name = "deploy"
     update_libs = False
+    generate_certs = False
 
 
 class VagrantDeploy(Deploy):
@@ -301,6 +304,7 @@ class VagrantDeploy(Deploy):
     """
     name = "vagrant_deploy"
     update_libs = True
+    generate_certs = False
 
     @calc_duration
     def run(self, no_input=False):
@@ -491,7 +495,12 @@ class LetsEncryptCreateCertificate(BaseTask):
     @calc_duration
     def run(self):
         # create a certificate for the first entry in server_names
-        sudo('letsencrypt certonly --email={} --agree-tos -a webroot --webroot-path=/tmp/letsencrypt-auto -d {}'.format(env.ssl_email, env.server_names[0]))
+        # TODO: dänu: why only the first entry?
+        # sudo('letsencrypt certonly --email={} --agree-tos -a webroot --webroot-path=/tmp/letsencrypt-auto -d {}'.format(env.ssl_email, env.server_names[0]))
+
+        all_names = env.server_names + env.alternative_server_names
+        certbot_cmd = 'letsencrypt certonly --email={} --agree-tos --register-unsafely-without-email -d '.format(env.ssl_email) + ' -d '.join(all_names)
+        sudo(certbot_cmd)
 
 
 class LetsEncryptRenewCertificates(BaseTask):
