@@ -11,7 +11,7 @@ from .taskbase import *
 from .bootstrap import *
 from fabric.tasks import Task
 
-checkforupdates = CheckForUpdates()
+# checkforupdates = CheckForUpdates()
 taillog = TailLog()
 full_deploy = Deploy()
 deploy = FastDeploy()

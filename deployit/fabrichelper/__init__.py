@@ -11,7 +11,6 @@ from functools import reduce
 from fabric.api import env
 from fabric.tasks import _execute as _execute_ori
 from fabric.utils import abort
-import fabric
 import fabric.main
 import sys
 

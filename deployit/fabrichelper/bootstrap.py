@@ -9,7 +9,7 @@
 # @author: paweloque <paweloque@gmail.com>
 from fabric.api import *
 from fabric.tasks import Task
-from fabric.operations import open_shell, sudo
+from fabric.operations import sudo
 from fabric.contrib.files import exists
 import os
 from fabric.api import env

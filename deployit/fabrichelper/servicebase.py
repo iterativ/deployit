@@ -8,11 +8,10 @@
 # Created on Jul 02, 2012
 # @author: paweloque <paweloque@gmail.com>
 from fabric.api import *
-from fabric.contrib.project import *
 from fabric.contrib.files import upload_template
 from datetime import datetime
 import os
-from fabric.contrib.files import exists, sed
+from fabric.contrib.files import sed
 
 
 class BaseService(object):

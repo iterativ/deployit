@@ -16,6 +16,7 @@ from itertools import zip_longest
 
 import pip
 from fabric.contrib.console import confirm
+from fabric.contrib.files import exists
 from fabric.tasks import Task
 
 from .decorators import warning, calc_duration

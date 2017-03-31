@@ -78,10 +78,10 @@ class EnvTask(Task):
         env.local_src = env.local_path('src')
         env.local_static_root = env.local_path(env.local_app, 'static')
 
-        if not 'database_backup_name' in env:
+        if 'database_backup_name' not in env:
             env.database_backup_name = '%s_%s.sql' % (env.project_name, env.env_name)
 
-        if not 'settings_module' in env:
+        if 'settings_module' not in env:
             env.settings_module = env.project_name + ".settings"
 
     def _run_wrapper(self):
