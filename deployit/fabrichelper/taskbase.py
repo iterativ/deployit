@@ -7,11 +7,11 @@
 #
 # Created on Jul 02, 2012
 # @author: paweloque <paweloque@gmail.com>
-import datetime
 import shutil
 import tempfile
 import time
 import urllib.request
+from datetime import datetime
 from itertools import zip_longest
 
 import pip
@@ -122,7 +122,9 @@ class Deploy(BaseTask):
             revision_date = ''
             changelog = ''
 
-        message = ', '.join([datetime.datetime.now().strftime("%Y-%d-%y %H:%M:%S,%f"),
+        import ipdb; ipdb.set_trace()
+
+        message = ', '.join([datetime.now().strftime("%Y-%d-%y %H:%M:%S,%f"),
                              username,
                              revision,
                              revision_date,
