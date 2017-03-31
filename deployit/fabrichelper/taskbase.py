@@ -11,10 +11,6 @@ import shutil
 import tempfile
 import time
 import urllib.request
-from datetime import datetime
-from itertools import zip_longest
-
-import pip
 from fabric.contrib.console import confirm
 from fabric.contrib.files import exists
 from fabric.tasks import Task
@@ -377,61 +373,6 @@ class TailLog(BaseTask):
 
     def run(self, no_input=False):
         sudo('tail -f %s --lines=30' % env.remote_path('log', '%(project_name)s.log' % env))
-
-
-# python3 has no xmlrpclib. what is the replacement? then you can reactivate this code here
-#
-# class CheckForUpdates(BaseTask):
-#     """
-#     Check if there are some package updates available (current activated env)
-#     """
-#     name = "check_for_updates"
-#
-#     def compare_version(self, version_local, version_remote):
-#         status = 0
-#         for l, r in izip_longest(version_local.split('.'), version_remote.split('.')):
-#             if l is None:
-#                 status = 1
-#                 break
-#             elif r is None:
-#                 status = 2
-#                 break
-#
-#             if l.isdigit() and r.isdigit():
-#                 l = int(l)
-#                 r = int(r)
-#             if l < r:
-#                 status = 1
-#                 break
-#             elif l > r:
-#                 status = 2
-#                 break
-#         if status == 1:
-#             return '\x1b[0;32m%s available\x1b[0;39m' % version_remote
-#         elif status == 2:
-#             return 'ahead (%s >= %s)' % (version_local, version_remote)
-#         else:
-#             return 'up to date'
-#
-#     @calc_duration
-#     def run(self):
-#         pypi = xmlrpclib.ServerProxy('http://pypi.python.org/pypi')
-#         print('check for updates (local):\n')
-#         for dist in pip.get_installed_distributions():
-#             available = pypi.package_releases(dist.project_name)
-#             if not available:
-#                 # Try to capitalize pkg name
-#                 available = pypi.package_releases(dist.project_name.capitalize())
-#             if not available:
-#                 # Try to lower
-#                 available = pypi.package_releases(dist.project_name.lower())
-#
-#             if not available:
-#                 msg = 'no releases at pypi'
-#             else:
-#                 msg = self.compare_version(dist.version, available[0])
-#             pkg_info = '{dist.project_name} {dist.version}'.format(dist=dist)
-#             print('\t{pkg_info:40} {msg}'.format(pkg_info=pkg_info, msg=msg))
 
 
 class Delete(BaseTask):
