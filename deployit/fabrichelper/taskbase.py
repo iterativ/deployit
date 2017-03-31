@@ -131,7 +131,7 @@ class Deploy(BaseTask):
         sudo("echo '%s' >> %s" % (message, env.remote_path('log', 'deploy.log')))
 
         # newrelic support
-        if env.has_key('newrelic_application_id') and env.has_key('newrelic_x_api_key'):
+        if 'newrelic_application_id' in env and 'newrelic_x_api_key' in env:
             context = {'application_id': env.newrelic_application_id,
                        'description': message,
                        'revision': revision_date or revision,
