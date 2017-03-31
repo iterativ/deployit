@@ -122,8 +122,6 @@ class Deploy(BaseTask):
             revision_date = ''
             changelog = ''
 
-        import ipdb; ipdb.set_trace()
-
         message = ', '.join([datetime.now().strftime("%Y-%d-%y %H:%M:%S,%f"),
                              username,
                              revision,
