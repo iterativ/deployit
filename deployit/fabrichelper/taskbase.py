@@ -426,8 +426,6 @@ class LetsEncryptCreateCertificate(BaseTask):
 
     @calc_duration
     def run(self, webroot=True):
-        # create a certificate for the first entry in server_names
-
         sudo('/etc/init.d/nginx stop')
         all_names = env.server_names + env.alternative_server_names
         if webroot:
