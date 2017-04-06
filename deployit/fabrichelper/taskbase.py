@@ -425,15 +425,15 @@ class LetsEncryptCreateCertificate(BaseTask):
     name = 'letsencrypt_create_certificate'
 
     @calc_duration
-    def run(self):
+    def run(self, webroot=True):
         # create a certificate for the first entry in server_names
-
-        # TODO: dänu: why only the first entry?
-        # sudo('letsencrypt certonly --email={} --agree-tos -a webroot --webroot-path=/tmp/letsencrypt-auto -d {}'.format(env.ssl_email, env.server_names[0]))
 
         sudo('/etc/init.d/nginx stop')
         all_names = env.server_names + env.alternative_server_names
-        certbot_cmd = 'letsencrypt certonly --email={} --agree-tos  -a webroot --webroot-path=/tmp/letsencrypt-auto -d '.format(env.ssl_email) + ' -d '.join(all_names)
+        if webroot:
+            certbot_cmd = 'letsencrypt certonly --email={} --agree-tos -a webroot --webroot-path=/tmp/letsencrypt-auto -d '.format(env.ssl_email) + ' -d '.join(all_names)
+        else:
+            certbot_cmd = 'letsencrypt certonly --email={} --agree-tos -d '.format(env.ssl_email) + ' -d '.join(all_names)
         sudo(certbot_cmd)
         sudo('/etc/init.d/nginx start')
 
