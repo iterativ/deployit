@@ -31,6 +31,12 @@ class PuppetBaseTask(Task):
         sudo('apt-get -y install puppet-common')
         sudo('apt-get -y install upstart')
         sudo('apt-get -y install upstart-sysv')
+
+        # nginx setup
+        sudo('apt-get -y install letsencrypt')
+        sudo('openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048')
+        sudo('apt-get -y install nginx')
+
         # get rid of missing hiera file warning
         if not exists('/etc/puppet/hiera.yaml'):
             sudo('touch /etc/puppet/hiera.yaml')
