@@ -433,7 +433,7 @@ class LetsEncryptCreateCertificate(BaseTask):
 
         sudo('/etc/init.d/nginx stop')
         all_names = env.server_names + env.alternative_server_names
-        certbot_cmd = 'letsencrypt certonly --email={} --agree-tos --register-unsafely-without-email -d '.format(env.ssl_email) + ' -d '.join(all_names)
+        certbot_cmd = 'letsencrypt certonly --email={} --agree-tos  -a webroot --webroot-path=/tmp/letsencrypt-auto -d '.format(env.ssl_email) + ' -d '.join(all_names)
         sudo(certbot_cmd)
         sudo('/etc/init.d/nginx start')
 
