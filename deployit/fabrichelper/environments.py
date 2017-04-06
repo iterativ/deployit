@@ -37,6 +37,7 @@ class EnvTask(Task):
                              '*.dat']
         env.project_name = None
         env.server_names = None
+        env.alternative_server_names = []
         env.deploy_folder = '/srv/www'
         env.env_name = None
         env.nginx_port = 80
