@@ -7,7 +7,6 @@
 #
 # Created on Jul 02, 2012
 # @author: paweloque <paweloque@gmail.com>
-import datetime
 import shutil
 import tempfile
 import time
@@ -124,7 +123,7 @@ class Deploy(BaseTask):
             revision_date = ''
             changelog = ''
 
-        message = ', '.join([datetime.datetime.now().strftime("%Y-%d-%y %H:%M:%S,%f"),
+        message = ', '.join([datetime.now().strftime("%Y-%d-%y %H:%M:%S,%f"),
                              username,
                              revision,
                              revision_date,
