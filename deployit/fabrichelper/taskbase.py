@@ -13,6 +13,7 @@ import time
 import urllib.request
 from fabric.contrib.console import confirm
 from fabric.contrib.files import exists
+from fabric.contrib.project import rsync_project
 from fabric.tasks import Task
 
 from .decorators import warning, calc_duration
