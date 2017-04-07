@@ -78,7 +78,7 @@ class EnvTask(Task):
         env.remote_app_path_virtualenv = os.path.join(env.remote_app_path, env.project_name + "-env")
         env.local_app = env.local_path('src', env.project_name)
         env.local_src = env.local_path('src')
-        env.local_static_root = env.local_path(env.local_app, 'staticfiles')
+        env.local_static_root = env.local_path(env.local_app, 'static')
 
         if not 'database_backup_name' in env:
             env.database_backup_name = '%s_%s.sql' % (env.project_name, env.env_name)
