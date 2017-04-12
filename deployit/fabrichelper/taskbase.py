@@ -7,13 +7,13 @@
 #
 # Created on Jul 02, 2012
 # @author: paweloque <paweloque@gmail.com>
-import datetime
 import shutil
 import tempfile
 import time
 import urllib
 import xmlrpclib
 from itertools import izip_longest
+from datetime import datetime
 
 import pip
 from fabric.contrib.console import confirm
@@ -122,7 +122,7 @@ class Deploy(BaseTask):
             revision_date = ''
             changelog = ''
 
-        message = ', '.join([datetime.datetime.now().strftime("%Y-%d-%y %H:%M:%S,%f"),
+        message = ', '.join([datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                              username,
                              revision,
                              revision_date,
@@ -309,8 +309,8 @@ class VagrantDeploy(Deploy):
 
 
 class DeployServices(BaseTask):
-    """ 
-    Deploy all services necessary to run this project 
+    """
+    Deploy all services necessary to run this project
     """
     name = "services_deploy"
 
@@ -320,8 +320,8 @@ class DeployServices(BaseTask):
 
 
 class RestartServices(BaseTask):
-    """ 
-    Restart all services necessary to run this project 
+    """
+    Restart all services necessary to run this project
     """
     name = "services_restart"
 
@@ -331,8 +331,8 @@ class RestartServices(BaseTask):
 
 
 class DeploySSLCerts(BaseTask):
-    """ 
-    Deploy the given SSL Certs. 
+    """
+    Deploy the given SSL Certs.
     """
     name = "deploy_sslcerts"
 
