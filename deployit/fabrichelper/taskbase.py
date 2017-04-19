@@ -483,16 +483,9 @@ class LetsEncryptCreateCertificate(BaseTask):
     name = 'letsencrypt_create_certificate'
 
     @calc_duration
-    def run(self, webroot=True):
-
-        sudo('/etc/init.d/nginx stop')
-        all_names = env.server_names + env.alternative_server_names
-        if webroot:
-            certbot_cmd = 'letsencrypt certonly --email={} --agree-tos -a webroot --webroot-path=/tmp/letsencrypt-auto -d '.format(env.ssl_email) + ' -d '.join(all_names)
-        else:
-            certbot_cmd = 'letsencrypt certonly --email={} --agree-tos -d '.format(env.ssl_email) + ' -d '.join(all_names)
-        sudo(certbot_cmd)
-        sudo('/etc/init.d/nginx start')
+    def run(self):
+        for server_name in env.server_names:
+            sudo('letsencrypt certonly --email={} --agree-tos -a webroot --webroot-path=/tmp/letsencrypt-auto -d {}'.format(env.ssl_email, server_name))
 
 
 class LetsEncryptRenewCertificates(BaseTask):
