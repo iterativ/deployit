@@ -8,12 +8,12 @@
 # Created on Jul 02, 2012
 # @author: paweloque <paweloque@gmail.com>
 
-from fabric.api import *
-from fabric.contrib.project import *
-from fabric.contrib.files import upload_template
-from datetime import datetime
 import os
-from fabric.contrib.files import exists, sed
+from datetime import datetime
+from fabric.api import *
+from fabric.contrib.files import sed
+from fabric.contrib.files import upload_template
+from fabric.contrib.project import *
 
 
 class BaseService(object):
@@ -109,18 +109,18 @@ class NewReclicService(BaseService):
 
 
 class UwsgiService(BaseService):
-    files = [{'filename': 'uwsgi.yaml',
-              'destination': '%(uwsgi_conf)s/%(env_name)s.%(project_name)s.yaml'},
-             {'filename': 'uwsgi.service.conf',
-              'destination': '/etc/systemd/system/uwsgi.service'}, ]
+    files = [{
+        'filename': 'uwsgi.yaml',
+        'destination': '%(uwsgi_conf)s/%(env_name)s.%(project_name)s.yaml'
+    },]
+
+    deamons = ['/etc/init.d/uwsgi']
 
     def deploy(self):
         sudo('sudo pip install uWSGI==2.0.14')
         sudo('mkdir /etc/uwsgi/apps-enabled -p')
         super(UwsgiService, self).deploy()
 
-    def restart(self):
-        sudo('systemctl stop uwsgi && systemctl start uwsgi')
 
 
 class CeleryService(BaseService):
