@@ -31,7 +31,7 @@ class BaseTask(Task):
             self.hosts = env.hosts
 
     def ensure_virtualenv(self):
-        if not exists(env.remote_app_path_virtualenv):
+        if not os.path.exists(env.remote_app_path_virtualenv):
             sudo(
                 "%(remote_virtualenv_py)s --no-site-packages --python=python%(python_version)s %(remote_app_path_virtualenv)s" % env)
 
