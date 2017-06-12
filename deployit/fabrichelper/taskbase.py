@@ -14,7 +14,7 @@ import time
 import urllib
 import xmlrpclib
 from itertools import izip_longest
-
+from datetime import datetime as datetime_local
 import pip
 from fabric.contrib.console import confirm
 from fabric.tasks import Task
@@ -122,7 +122,8 @@ class Deploy(BaseTask):
             revision_date = ''
             changelog = ''
 
-        message = ', '.join([datetime.datetime.now().strftime("%Y-%d-%y %H:%M:%S,%f"),
+
+        message = ', '.join([datetime_local.now().strftime("%Y-%d-%y %H:%M:%S,%f"),
                              username,
                              revision,
                              revision_date,
