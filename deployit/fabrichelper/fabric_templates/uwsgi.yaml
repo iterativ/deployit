@@ -20,3 +20,8 @@ uwsgi:
     enable-threads: True
     python-autoreload: 1
     {%- endif %}
+    log-maxsize : 200000000
+    log-backupname : {{ deploy_folder }}/{{ project_name }}/{{ env_name }}/log/uwsgi_{{ project_name }}_{{ env_name }}_backup.log
+
+
+
