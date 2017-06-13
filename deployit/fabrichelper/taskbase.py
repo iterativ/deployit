@@ -468,7 +468,7 @@ class LoadBackup(BaseTask):
             backup_remote_tar_filepath = backup_remote_path + '.tar.gz'
             backup_local_tar_filepath = env.backup_local_path + '.tar.gz'
 
-            if not exists(backup_remote_tar_filepath, use_sudo=True):
+            if not os.path.exists(backup_remote_tar_filepath):
                 backup_remote_dir, backup_remote_file_basename = os.path.split(backup_remote_path)
                 tar_command = 'tar -C {} -czf {} {}'.format(backup_remote_dir, backup_remote_tar_filepath, backup_remote_file_basename)
                 sudo(tar_command)
