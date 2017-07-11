@@ -60,5 +60,6 @@ setup(
         'Fabric3==1.13.1.post1',
         'Jinja2==2.8',
         'python-dateutil==2.5.3',
+        'requests==2.18.1'
     ]
 )
