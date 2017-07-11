@@ -20,6 +20,12 @@ from .decorators import warning, calc_duration
 from .servicebase import *
 
 
+def get_python_cmd(python_version_string):
+    if python_version_string.startswith('3'):
+        return 'python3'
+    return 'python'
+
+
 class BaseTask(Task):
     def __init__(self):
         # see whether the tasks class overrides the hostslist
@@ -36,7 +42,7 @@ class BaseTask(Task):
         sudo("source %s/bin/activate && %s" % (env.remote_app_path_virtualenv, command))
 
     def managepy(self, command):
-        self.virtualenv('python3 -u %s/manage.py %s' % (env.remote_path(), command))
+        self.virtualenv('%s -u %s/manage.py %s' % (get_python_cmd(env.python_version), env.remote_path(), command))
 
     def adjust_rights(self, user=None):
         if user is None:
@@ -88,7 +94,7 @@ class Deploy(BaseTask):
     update_libs = True
 
     def deploy_static(self):
-        local('python3 %(local_src)s/manage.py collectstatic --noinput' % env)
+        local('%s %s/manage.py collectstatic --noinput' % (get_python_cmd(env.python_version), env.local_src)
         rsync_project(
             remote_dir=env.remote_path(env.project_name),
             local_dir=env.local_static_root,
@@ -336,7 +342,7 @@ class ManagePy(BaseTask):
     @calc_duration
     def run(self, command_name=''):
         with cd(env.remote_path()):
-            self.virtualenv('python3 -u manage.py %s' % (command_name, ))
+            self.virtualenv('%s -u manage.py %s' % (get_python_cmd(env.python_version), command_name))
 
 
 class ResetLoad(BaseTask):
@@ -349,7 +355,7 @@ class ResetLoad(BaseTask):
     @calc_duration
     def run(self, no_input=False):
         with cd(env.remote_path()):
-            self.virtualenv('python3 -u manage.py resetload')
+            self.virtualenv('{} -u manage.py resetload'.format(get_python_cmd(env.python_version)))
         self.adjust_rights()
 
 
@@ -362,7 +368,7 @@ class Migrate(BaseTask):
     @calc_duration
     def run(self, args=''):
         with cd(env.remote_path()):
-            self.virtualenv('python3 -u manage.py migrate %s' % args)
+            self.virtualenv('%s -u manage.py migrate %s' % (get_python_cmd(env.python_version), args))
 
 
 class TailLog(BaseTask):
@@ -418,7 +424,7 @@ class LoadBackup(BaseTask):
             get(backup_remote_tar_filepath, backup_local_tar_filepath)
             local('tar -xf {} -C {}'.format(backup_local_tar_filepath, os.path.dirname(backup_local_tar_filepath)))
 
-        local('python3 %(local_src)s/manage.py loaddump --dump_path=%(backup_local_path)s' % env)
+        local(get_python_cmd(env.python_version) + ' %(local_src)s/manage.py loaddump --dump_path=%(backup_local_path)s' % env)
 
 
 class LetsEncryptCreateCertificate(BaseTask):
