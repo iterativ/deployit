@@ -50,7 +50,7 @@ class EnvTask(Task):
         env.services = []
         env.requirements_file = "requirements.txt"
         env.remote_virtualenv_py = 'virtualenv'
-        env.python_version = '3.5'
+        env.python_version = '2.7'
         env.service_dir = '/etc/init.d/'
         env.backup_remote_path = '/var/backups/postgres/pgbackup/'
         env.ssl_email = 'info@iterativ.ch'
