@@ -29,7 +29,7 @@ class BaseTask(Task):
             self.hosts = env.hosts
 
     def ensure_virtualenv(self):
-        if not exists(env.remote_app_path_virtualenv):
+        if not os.path.exists(env.remote_app_path_virtualenv):
             sudo("%(remote_virtualenv_py)s --no-site-packages --python=python%(python_version)s %(remote_app_path_virtualenv)s" % env)
 
     def virtualenv(self, command):
@@ -411,7 +411,7 @@ class LoadBackup(BaseTask):
             backup_remote_tar_filepath = backup_remote_path + '.tar.gz'
             backup_local_tar_filepath = env.backup_local_path + '.tar.gz'
 
-            if not exists(backup_remote_tar_filepath, use_sudo=True):
+            if not os.path.exists(backup_remote_tar_filepath):
                 backup_remote_dir, backup_remote_file_basename = os.path.split(backup_remote_path)
                 tar_command = 'tar -C {} -czf {} {}'.format(backup_remote_dir, backup_remote_tar_filepath, backup_remote_file_basename)
                 sudo(tar_command)
@@ -427,14 +427,10 @@ class LetsEncryptCreateCertificate(BaseTask):
 
     @calc_duration
     def run(self, webroot=True):
-        sudo('/etc/init.d/nginx stop')
         all_names = env.server_names + env.alternative_server_names
-        if webroot:
-            certbot_cmd = 'letsencrypt certonly --email={} --agree-tos -a webroot --webroot-path=/tmp/letsencrypt-auto -d '.format(env.ssl_email) + ' -d '.join(all_names)
-        else:
-            certbot_cmd = 'letsencrypt certonly --email={} --agree-tos -d '.format(env.ssl_email) + ' -d '.join(all_names)
+        certbot_cmd = 'letsencrypt certonly --email={} --agree-tos -a webroot --webroot-path=/tmp/letsencrypt-auto -d '.format(env.ssl_email) + ' -d '.join(all_names)
         sudo(certbot_cmd)
-        sudo('/etc/init.d/nginx start')
+
 
 
 class LetsEncryptRenewCertificates(BaseTask):

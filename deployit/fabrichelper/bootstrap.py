@@ -56,7 +56,7 @@ class PuppetBaseTask(Task):
         sudo('puppet module install puppetlabs-mysql --version 3.10.0 --force')
         sudo('puppet module install puppetlabs-inifile --version 1.5.0 --force')
 
-        sudo('puppet module install puppetlabs-rabbitmq --version 5.5.0 --force')
+        sudo('puppet module install puppetlabs-rabbitmq --version 5.6.0 --force')
         sudo('puppet module install puppetlabs-mongodb --version 0.14.0 --force')
         sudo('puppet module install puppetlabs-haproxy --version 1.5.0 --force')
         sudo('puppet module install puppetlabs-ruby --version 0.5.0 --force')
@@ -69,6 +69,7 @@ class PuppetBaseTask(Task):
         sudo('puppet module install petems-swap_file --version 3.0.2 --force')
         sudo('puppet module install tmont-rethinkdb --version 0.1.0 --force')
 
+        sudo('puppet module install elastic-elasticsearch --version 5.3.1')
         #sudo('puppet module install elasticsearch-elasticsearch --version 0.10.3 --force')
         #sudo('puppet module install jfryman-nginx --version 0.0.10 --force')
 
