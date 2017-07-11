@@ -127,7 +127,10 @@ class UwsgiService(BaseService):
     deamons = ['/etc/init.d/uwsgi']
 
     def deploy(self):
-        sudo('sudo pip3 install uWSGI==2.0.14')
+        if env.python_version.startswith('3'):
+            sudo('sudo pip3 install uWSGI==2.0.15')
+        else:
+            sudo('sudo pip install uWSGI==2.0.15')
         sudo('mkdir /etc/uwsgi/apps-enabled -p')
         super(UwsgiService, self).deploy()
 

@@ -28,8 +28,6 @@ class PuppetBaseTask(Task):
 
         sudo('apt-get -y install git')
         sudo('apt-get -y install puppet-common')
-        sudo('apt-get -y install upstart')
-        sudo('apt-get -y install upstart-sysv')
 
         # nginx setup
         sudo('apt-get -y install letsencrypt')
