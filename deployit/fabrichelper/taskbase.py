@@ -10,7 +10,7 @@
 import shutil
 import tempfile
 import time
-import reqests
+import requests
 from fabric.contrib.console import confirm
 from fabric.contrib.files import exists
 from fabric.contrib.project import rsync_project
@@ -53,7 +53,7 @@ class BaseTask(Task):
         print('Load {} ...'.format(ahost))
         try:
             r = requests.get(ahost)
-            http_code = f.status_code
+            http_code = r.status_code
             msg = 'HTTP status code: %s' % http_code
             if http_code != 200:
                 print('ERROR {}'.format(msg))
