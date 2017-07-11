@@ -94,7 +94,7 @@ class Deploy(BaseTask):
     update_libs = True
 
     def deploy_static(self):
-        local('%s %s/manage.py collectstatic --noinput' % (get_python_cmd(env.python_version), env.local_src)
+        local('%s %s/manage.py collectstatic --noinput' % (get_python_cmd(env.python_version), env.local_src))
         rsync_project(
             remote_dir=env.remote_path(env.project_name),
             local_dir=env.local_static_root,
