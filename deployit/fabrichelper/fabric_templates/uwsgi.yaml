@@ -1,7 +1,8 @@
 uwsgi:
     uid: www-data
     gid: www-data
-    socket: /tmp/uwsgi_{{ env_name }}_{{ project_name }}.sock
+    socket: /run/uwsgi/{{ env_name }}_{{ project_name }}.sock
+    socket-chmod: 666
     pyhome: {{ deploy_folder }}/{{ project_name }}/{{ env_name }}/{{ project_name }}-env
     pythonpath: {{ deploy_folder }}/{{ project_name }}/{{ env_name }}
     chdir: {{ deploy_folder }}/{{ project_name }}/{{ env_name }}/{{ project_name }}

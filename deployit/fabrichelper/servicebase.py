@@ -18,14 +18,14 @@ from fabric.contrib.files import exists, sed
 
 class BaseService(object):
     files = []
-    deamons = []
+    daemons = []
 
     def __init__(self):
         for f in self.files:
             dest = f['destination'] % env
             f['destination'] = dest
-            if dest.startswith(env.service_dir) and dest not in self.deamons:
-                self.deamons.append(dest)
+            if dest.startswith(env.service_dir) and dest not in self.daemons:
+                self.daemons.append(dest)
 
     def _env_to_dict(self, adict):
         for k, v in adict.items():
@@ -59,18 +59,18 @@ class BaseService(object):
                             use_jinja=True,
                             use_sudo=True,
                             template_dir=template_dir)
-        for f in self.deamons:
+        for f in self.daemons:
             sudo('chmod +x %s' % f % env)
 
     def restart(self):
-        for f in self.deamons:
+        for f in self.daemons:
             sudo('%s restart' % f % env)
 
 
 class NginxService(BaseService):
     files = [{'filename': 'nginx.conf',
               'destination': '%(nginx_conf)s/%(env_name)s.%(project_name)s.conf'}, ]
-    deamons = ['/etc/init.d/nginx']
+    daemons = ['/lib/systemd/system/nginx.service']
 
 
 class EnvStatusService(BaseService):
@@ -112,18 +112,23 @@ class UwsgiService(BaseService):
     files = [{
         'filename': 'uwsgi.yaml',
         'destination': '%(uwsgi_conf)s/%(env_name)s.%(project_name)s.yaml'
-    },]
+    },
+        {'filename': 'uwsgi.service.conf',
+         'destination': '/etc/systemd/system/uwsgi.service'}, ]
 
-    deamons = ['/etc/init.d/uwsgi']
+    daemons = ['/etc/systemd/system/uwsgi.service']
 
     def deploy(self):
         if env.python_version.startswith('3'):
             sudo('sudo pip3 install uWSGI==2.0.15')
         else:
             sudo('sudo pip install uWSGI==2.0.15')
-        sudo('mkdir /etc/uwsgi/apps-enabled -p')
+        sudo('mkdir /etc/uwsgi/sites -p')
+        logfile = "%(deploy_folder)s/%(project_name)s/%(env_name)s/log/uwsgi_%(project_name)s_%(env_name)s.log" % env
+        sudo('mkdir %(deploy_folder)s/%(project_name)s/%(env_name)s/log/ -p' % env)
+        sudo('touch {}'.format(logfile))
+        sudo('chmod 666 {}'.format(logfile))
         super(UwsgiService, self).deploy()
-
 
 
 class CeleryService(BaseService):
@@ -144,7 +149,7 @@ class CeleryService(BaseService):
 class PhpNginxService(BaseService):
     files = [{'filename': 'php_nginx.conf',
               'destination': '%(nginx_conf)s/%(env_name)s.%(project_name)s.conf'}, ]
-    deamons = ['/etc/init.d/nginx', '/etc/init.d/php5-fpm']
+    daemons = ['/etc/init.d/nginx', '/etc/init.d/php5-fpm']
 
 
 class FlaskUwsgiService(UwsgiService):
@@ -157,10 +162,10 @@ class FlaskUwsgiService(UwsgiService):
 class FlaskNginxService(NginxService):
     files = [{'filename': 'flask_nginx.conf',
               'destination': '%(nginx_conf)s/%(env_name)s.%(project_name)s.conf'}, ]
-    deamons = ['/etc/init.d/nginx']
+    daemons = ['/etc/init.d/nginx']
 
 
 class StaticNginxService(NginxService):
     files = [{'filename': 'static_nginx.conf',
               'destination': '%(nginx_conf)s/%(env_name)s.%(project_name)s.conf'}, ]
-    deamons = ['/etc/init.d/nginx']
+    daemons = ['/etc/init.d/nginx']

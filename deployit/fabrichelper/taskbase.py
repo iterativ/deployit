@@ -208,7 +208,6 @@ class Deploy(BaseTask):
 
         if self.update_libs:
             self.deploy_services()
-        self.restart_services()
         self.adjust_rights()
 
         status_code = self.load_site("http://%s" % env.server_names[0])
@@ -216,6 +215,8 @@ class Deploy(BaseTask):
 
         if migrate:
             Migrate().run()
+
+        self.restart_services()
 
 
 class FlaskDeploy(Deploy):

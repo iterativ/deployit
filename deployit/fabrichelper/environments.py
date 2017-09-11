@@ -45,13 +45,13 @@ class EnvTask(Task):
         env.global_template_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'fabric_templates')
         env.nginx_conf = '/etc/nginx/sites-enabled'
         env.nginx_no_follow = False
-        env.uwsgi_conf = '/etc/uwsgi/apps-enabled'
+        env.uwsgi_conf = '/etc/uwsgi/sites'
         env.hosts = []
         env.services = []
         env.requirements_file = "requirements.txt"
         env.remote_virtualenv_py = 'virtualenv'
-        env.python_version = '2.7'
-        env.service_dir = '/etc/init.d/'
+        env.python_version = '3.5'
+        env.service_dir = '/etc/systemd/system/'
         env.backup_remote_path = '/var/backups/postgres/pgbackup/'
         env.ssl_email = 'info@iterativ.ch'
         # settings for puppet
