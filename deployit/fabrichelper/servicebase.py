@@ -130,6 +130,8 @@ class UwsgiService(BaseService):
         sudo('chmod 666 {}'.format(logfile))
         super(UwsgiService, self).deploy()
 
+    def restart(self):
+        sudo('systemctl restart uwsgi.service')
 
 class CeleryService(BaseService):
     celeryd_init_script_file_name = 'celeryd_%(project_name)s_%(env_name)s'
