@@ -132,6 +132,7 @@ class UwsgiService(BaseService):
 
     def restart(self):
         sudo('systemctl restart uwsgi.service')
+        sudo('systemctl status uwsgi.service')
 
 class CeleryService(BaseService):
     celeryd_init_script_file_name = 'celeryd_%(project_name)s_%(env_name)s'
