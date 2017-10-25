@@ -59,8 +59,8 @@ class PuppetBaseTask(Task):
         sudo('puppet module install tmont-rethinkdb --version 0.1.0 --force')
 
         sudo('puppet module install elastic-elasticsearch --version 5.3.1')
-        #sudo('puppet module install elasticsearch-elasticsearch --version 0.10.3 --force')
-        #sudo('puppet module install jfryman-nginx --version 0.0.10 --force')
+        # sudo('puppet module install elasticsearch-elasticsearch --version 0.10.3 --force')
+        # sudo('puppet module install jfryman-nginx --version 0.0.10 --force')
 
     def clone_modules(self):
         # the hg clone uses the ssh method which requires a correct certificate

@@ -438,7 +438,6 @@ class LetsEncryptCreateCertificate(BaseTask):
         sudo(certbot_cmd)
 
 
-
 class LetsEncryptRenewCertificates(BaseTask):
     name = 'letsencrypt_renew_certificates'
 
