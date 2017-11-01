@@ -1,6 +1,0 @@
-{
-    "lastDeployment": "{{ envStatusLastDeployment }}", 
-    "gitBranch": "{{ envStatusGitBranch }}",
-    "gitChecksum": "{{ envStatusGitChecksum }}",
-    "gitTimestamp": "{{ envStatusLastCommitDate }}"
-}  

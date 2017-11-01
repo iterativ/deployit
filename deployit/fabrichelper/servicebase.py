@@ -73,19 +73,6 @@ class NginxService(BaseService):
     daemons = ['/lib/systemd/system/nginx.service']
 
 
-class EnvStatusService(BaseService):
-    files = [{'filename': 'envstatus.json',
-              'destination': '%(deploy_folder)s/%(project_name)s/%(env_name)s/%(project_name)s/static/envstatus.json'}, ]
-
-    def deploy(self):
-        # TODO: this will only work with git.
-        env.envStatusLastDeployment = datetime.now().__str__()
-        env.envStatusGitBranch = local("git rev-parse --abbrev-ref HEAD", capture=True)
-        env.envStatusGitChecksum = local('git rev-parse HEAD', capture=True)
-        env.envStatusLastCommitDate = local('git log -1 --format=%cd', capture=True)
-        super(EnvStatusService, self).deploy()
-
-
 class NewReclicService(BaseService):
     newrelic_ini = os.path.join('%(deploy_folder)s/%(project_name)s/%(env_name)s/newrelic.ini')
     newrelic_list = "/etc/apt/sources.list.d/newrelic.list"
@@ -109,30 +96,36 @@ class NewReclicService(BaseService):
 
 
 class UwsgiService(BaseService):
-    files = [{
-        'filename': 'uwsgi.yaml',
-        'destination': '%(uwsgi_conf)s/%(env_name)s.%(project_name)s.yaml'
-    },
-        {'filename': 'uwsgi.service.conf',
-         'destination': '/etc/systemd/system/uwsgi.service'}, ]
-
+    files = [{'filename': 'uwsgi.yaml',
+              'destination': '%(uwsgi_conf)s/%(env_name)s.%(project_name)s.yaml'},
+             {'filename': 'uwsgi.service.conf',
+              'destination': '/etc/systemd/system/uwsgi.service'}, ]
     daemons = ['/etc/systemd/system/uwsgi.service']
 
     def deploy(self):
+        # Pawel: IMHO this should all be handled in puppet, not here
         if env.python_version.startswith('3'):
-            sudo('sudo pip3 install uWSGI==2.0.15')
+            sudo('pip3 install uWSGI==2.0.15')
         else:
-            sudo('sudo pip install uWSGI==2.0.15')
+            sudo('pip install uWSGI==2.0.15')
         sudo('mkdir /etc/uwsgi/sites -p')
         logfile = "%(deploy_folder)s/%(project_name)s/%(env_name)s/log/uwsgi_%(project_name)s_%(env_name)s.log" % env
         sudo('mkdir %(deploy_folder)s/%(project_name)s/%(env_name)s/log/ -p' % env)
         sudo('touch {}'.format(logfile))
         sudo('chmod 666 {}'.format(logfile))
+
+        # reload necessary because we changed uwsgi.service description
+        # sudo('systemctl daemon-reload')
+        
         super(UwsgiService, self).deploy()
 
     def restart(self):
+        # reload necessary because we changed uwsgi.service description
+        sudo('systemctl daemon-reload')
+
         sudo('systemctl restart uwsgi.service')
         sudo('systemctl status uwsgi.service')
+
 
 class CeleryService(BaseService):
     celeryd_init_script_file_name = 'celeryd_%(project_name)s_%(env_name)s'
@@ -147,12 +140,6 @@ class CeleryService(BaseService):
 
         command = 'update-rc.d %s defaults' % self.celeryd_init_script_file_name % env
         sudo(command)
-
-
-class PhpNginxService(BaseService):
-    files = [{'filename': 'php_nginx.conf',
-              'destination': '%(nginx_conf)s/%(env_name)s.%(project_name)s.conf'}, ]
-    daemons = ['/etc/init.d/nginx', '/etc/init.d/php5-fpm']
 
 
 class FlaskUwsgiService(UwsgiService):
@@ -172,3 +159,4 @@ class StaticNginxService(NginxService):
     files = [{'filename': 'static_nginx.conf',
               'destination': '%(nginx_conf)s/%(env_name)s.%(project_name)s.conf'}, ]
     daemons = ['/etc/init.d/nginx']
+

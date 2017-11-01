@@ -117,8 +117,8 @@ class PuppetBaseInstall(PuppetBaseTask):
 
     @calc_duration
     def run(self):
-        self.base_install()
         self.update_upgrade()
+        self.base_install()
 
         self.clone_modules()
 
