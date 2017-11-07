@@ -8,12 +8,11 @@
 # Created on Jul 02, 2012
 # @author: paweloque <paweloque@gmail.com>
 import os
-from datetime import datetime
 from fabric.api import *
-from fabric.contrib.project import *
+from fabric.contrib.files import sed
 from fabric.contrib.files import upload_template
 from fabric.contrib.project import *
-from fabric.contrib.files import exists, sed
+from fabric.contrib.project import *
 
 
 class BaseService(object):
@@ -124,7 +123,7 @@ class UwsgiService(BaseService):
         sudo('systemctl daemon-reload')
 
         sudo('systemctl restart uwsgi.service')
-        sudo('systemctl status uwsgi.service')
+        sudo('systemctl --no-pager status uwsgi.service')
 
 
 class CeleryService(BaseService):
