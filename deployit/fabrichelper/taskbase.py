@@ -109,6 +109,7 @@ class Deploy(BaseTask):
         import getpass
         import dateutil.parser
         import socket
+        import datetime
 
         try:
             username = getpass.getuser() + '@' + socket.gethostname()
@@ -125,7 +126,7 @@ class Deploy(BaseTask):
             revision_date = ''
             changelog = ''
 
-        message = ', '.join([datetime.now().strftime("%Y-%d-%y %H:%M:%S,%f"),
+        message = ', '.join([datetime.datetime.now().strftime("%Y-%d-%y %H:%M:%S,%f"),
                              username,
                              revision,
                              revision_date,
