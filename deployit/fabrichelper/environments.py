@@ -7,8 +7,8 @@
 #
 # Created on Jul 02, 2012
 # @author: maersu <me@maersu.ch>
-from fabric.api import env
 import os
+from fabric.api import env
 from fabric.tasks import Task
 
 
@@ -33,7 +33,8 @@ class EnvTask(Task):
                              '*.pyc',
                              '*.log',
                              '*.db',
-                             '*.dat']
+                             '*.dat',
+                             'settings/*',]
         env.project_name = None
         env.server_names = None
         env.alternative_server_names = []

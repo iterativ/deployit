@@ -178,6 +178,16 @@ class Deploy(BaseTask):
             put(env.env_path('settings_local.py'), env.remote_path(env.project_name), use_sudo=True)
         self.copy_django_manage_file()
 
+        remote_settings_path = os.path.join(env.remote_app_path, env.project_name, 'settings')
+        local_settings_path = os.path.join(env.local_app, 'settings')
+
+        local_base_settings_path = os.path.join(local_settings_path, 'base.py')
+        local_env_settings_path = os.path.join(local_settings_path, env.env_name + '.py')
+
+        if os.path.exists(local_base_settings_path) and os.path.exists(local_env_settings_path):
+            put(local_base_settings_path, os.path.join(remote_settings_path, 'base.py'), use_sudo=True)
+            put(local_env_settings_path, os.path.join(remote_settings_path, env.env_name + '.py'), use_sudo=True)
+
     def copy_django_manage_file(self):
         upload_template('manage.py',
                         '{path}/manage.py'.format(path=env.remote_path()),
