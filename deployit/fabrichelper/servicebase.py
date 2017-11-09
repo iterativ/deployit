@@ -121,24 +121,24 @@ class UwsgiService(BaseService):
     def restart(self):
         # reload necessary because we changed uwsgi.service description
         sudo('systemctl daemon-reload')
-
-        sudo('systemctl restart uwsgi.service')
-        sudo('systemctl --no-pager status uwsgi.service')
+        super(UwsgiService, self).restart()
 
 
 class CeleryService(BaseService):
-    celeryd_init_script_file_name = 'celeryd_%(project_name)s_%(env_name)s'
+    celeryd_init_script_file_name = 'celeryd_%(project_name)s_%(env_name)s.service'
     celeryd_init_script_file_path = '%(service_dir)s' + celeryd_init_script_file_name
     files = [{'filename': 'celeryd_default',
               'destination': '/etc/default/celeryd_%(project_name)s_%(env_name)s'},
-             {'filename': 'celeryd_initd',
+             {'filename': 'celery.service',
               'destination': celeryd_init_script_file_path}, ]
 
     def deploy(self):
         super(CeleryService, self).deploy()
 
-        command = 'update-rc.d %s defaults' % self.celeryd_init_script_file_name % env
-        sudo(command)
+    def restart(self):
+        # reload necessary because we changed uwsgi.service description
+        sudo('systemctl daemon-reload')
+        sudo('systemctl restart ' + self.celeryd_init_script_file_name % env)
 
 
 class FlaskUwsgiService(UwsgiService):
@@ -146,12 +146,6 @@ class FlaskUwsgiService(UwsgiService):
               'destination': '%(uwsgi_conf)s/%(env_name)s.%(project_name)s.yaml'},
              {'filename': 'uwsgi.service.conf',
               'destination': '/etc/systemd/system/uwsgi.service'}, ]
-
-
-class FlaskNginxService(NginxService):
-    files = [{'filename': 'flask_nginx.conf',
-              'destination': '%(nginx_conf)s/%(env_name)s.%(project_name)s.conf'}, ]
-    daemons = ['/etc/init.d/nginx']
 
 
 class StaticNginxService(NginxService):
