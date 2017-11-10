@@ -123,7 +123,7 @@ class UwsgiService(BaseService):
         sudo('systemctl daemon-reload')
 
         sudo('systemctl restart uwsgi.service')
-        sudo('systemctl status uwsgi.service')
+        sudo('systemctl --no-pager status uwsgi.service')
 
 
 class CeleryService(BaseService):
