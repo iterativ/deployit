@@ -121,7 +121,9 @@ class UwsgiService(BaseService):
     def restart(self):
         # reload necessary because we changed uwsgi.service description
         sudo('systemctl daemon-reload')
-        super(UwsgiService, self).restart()
+
+        sudo('systemctl restart uwsgi.service')
+        sudo('systemctl status uwsgi.service')
 
 
 class CeleryService(BaseService):
