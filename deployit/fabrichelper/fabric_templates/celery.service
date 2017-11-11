@@ -6,6 +6,7 @@ After=network.target
 Type=forking
 User=www-data
 Group=www-data
+Restart=always
 EnvironmentFile=/etc/default/celeryd_{{ project_name }}_{{ env_name }}
 WorkingDirectory={{ deploy_folder }}/{{ project_name }}/{{ env_name }}/
 ExecStart=/bin/sh -c '${CELERY_BIN} multi start ${CELERYD_NODES} \
