@@ -136,6 +136,7 @@ class CeleryService(BaseService):
 
     def deploy(self):
         super(CeleryService, self).deploy()
+        sudo('systemctl enable ' + self.celeryd_init_script_file_name % env)
 
     def restart(self):
         # reload necessary because we changed uwsgi.service description
