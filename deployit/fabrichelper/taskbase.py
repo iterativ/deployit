@@ -185,6 +185,7 @@ class Deploy(BaseTask):
         local_env_settings_path = os.path.join(local_settings_path, env.env_name + '.py')
 
         if os.path.exists(local_base_settings_path) and os.path.exists(local_env_settings_path):
+            put(os.path.join(local_settings_path, '__init__.py'), os.path.join(remote_settings_path, '__init__.py'), use_sudo=True)
             put(local_base_settings_path, os.path.join(remote_settings_path, 'base.py'), use_sudo=True)
             put(local_env_settings_path, os.path.join(remote_settings_path, env.env_name + '.py'), use_sudo=True)
 
