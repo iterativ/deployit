@@ -3,6 +3,9 @@ Description=Celery Service
 After=network.target
 
 [Service]
+ExecStartPre=/bin/mkdir -p /run/celery
+ExecStartPre=/bin/chown -R www-data:www-data /run/celery
+PermissionsStartOnly=true
 Type=forking
 User=www-data
 Group=www-data
