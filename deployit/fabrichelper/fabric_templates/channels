@@ -1,0 +1,17 @@
+#!/bin/bash
+
+run_worker() {
+    {{ deploy_folder }}/{{ project_name }}/{{ env_name }}/{{ project_name }}-env/bin/python {{ deploy_folder }}/{{ project_name }}/{{ env_name }}/manage.py runworker
+}
+if [ $# -ne 1 ] || ! [[ $1 =~ ^[0-9]+$ ]]; then
+  echo "Please provide exactly one positive integer as the argument"
+  exit 1
+fi
+
+max=$1
+#echo $max
+for ((i=0;i<$max; i++))
+do
+    run_worker &
+done
+

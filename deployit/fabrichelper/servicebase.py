@@ -23,8 +23,6 @@ class BaseService(object):
         for f in self.files:
             dest = f['destination'] % env
             f['destination'] = dest
-            if dest.startswith(env.service_dir) and dest not in self.daemons:
-                self.daemons.append(dest)
 
     def _env_to_dict(self, adict):
         for k, v in adict.items():
@@ -58,20 +56,25 @@ class BaseService(object):
                             use_jinja=True,
                             use_sudo=True,
                             template_dir=template_dir)
+
+        sudo('systemctl daemon-reload')
         for f in self.daemons:
-            sudo('chmod +x %s' % f % env)
+            sudo('systemctl enable %s' % f % env)
 
     def restart(self):
+        sudo('systemctl daemon-reload')
         for f in self.daemons:
-            sudo('%s restart' % f % env)
+            sudo('systemctl restart %s' % f % env)
+            sudo('systemctl --no-pager status %s' % f % env)
 
 
 class NginxService(BaseService):
     files = [{'filename': 'nginx.conf',
               'destination': '%(nginx_conf)s/%(env_name)s.%(project_name)s.conf'}, ]
-    daemons = ['/lib/systemd/system/nginx.service']
+    daemons = ['nginx.service']
 
 
+# Todo: refactor for SystemD
 class NewReclicService(BaseService):
     newrelic_ini = os.path.join('%(deploy_folder)s/%(project_name)s/%(env_name)s/newrelic.ini')
     newrelic_list = "/etc/apt/sources.list.d/newrelic.list"
@@ -99,7 +102,7 @@ class UwsgiService(BaseService):
               'destination': '%(uwsgi_conf)s/%(env_name)s.%(project_name)s.yaml'},
              {'filename': 'uwsgi.service.conf',
               'destination': '/etc/systemd/system/uwsgi.service'}, ]
-    daemons = ['/etc/systemd/system/uwsgi.service']
+    daemons = ['uwsgi.service']
 
     def deploy(self):
         # Pawel: IMHO this should all be handled in puppet, not here
@@ -118,12 +121,6 @@ class UwsgiService(BaseService):
         
         super(UwsgiService, self).deploy()
 
-    def restart(self):
-        # reload necessary because we changed uwsgi.service description
-        sudo('systemctl daemon-reload')
-
-        sudo('systemctl restart uwsgi.service')
-        sudo('systemctl --no-pager status uwsgi.service')
 
 
 class CeleryService(BaseService):
@@ -133,15 +130,7 @@ class CeleryService(BaseService):
               'destination': '/etc/default/celeryd_%(project_name)s_%(env_name)s'},
              {'filename': 'celery.service',
               'destination': celeryd_init_script_file_path}, ]
-
-    def deploy(self):
-        super(CeleryService, self).deploy()
-        sudo('systemctl enable ' + self.celeryd_init_script_file_name % env)
-
-    def restart(self):
-        # reload necessary because we changed uwsgi.service description
-        sudo('systemctl daemon-reload')
-        sudo('systemctl restart ' + self.celeryd_init_script_file_name % env)
+    daemons = [celeryd_init_script_file_name]
 
 
 class FlaskUwsgiService(UwsgiService):
@@ -154,5 +143,29 @@ class FlaskUwsgiService(UwsgiService):
 class StaticNginxService(NginxService):
     files = [{'filename': 'static_nginx.conf',
               'destination': '%(nginx_conf)s/%(env_name)s.%(project_name)s.conf'}, ]
-    daemons = ['/etc/init.d/nginx']
+    daemons = ['nginx.service']
 
+
+class ChannelsService(BaseService):
+    files =  [
+        {
+            'filename': 'channels',
+            'destination': '/usr/bin/channels'
+        },
+        {
+            'filename': 'channels.service',
+            'destination': '/etc/systemd/system/channels.service',
+            'extra_context': {'num_processes': env.get('num_cores', 3)*2}, # cores x 2
+        },
+        {
+            'filename': 'daphne',
+            'destination': '/usr/bin/daphne',
+        },
+        {
+            'filename': 'daphne.service',
+            'destination': '/etc/systemd/system/daphne.service'
+        }
+
+    ]
+
+    daemons = ['daphne.service', 'channels.service']

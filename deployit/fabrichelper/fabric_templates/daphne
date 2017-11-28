@@ -1,0 +1,5 @@
+#!/bin/bash
+cd {{ deploy_folder }}/{{ project_name }}/{{ env_name }}/
+source {{ deploy_folder }}/{{ project_name }}/{{ env_name }}/{{ project_name }}-env/bin/activate
+export DJANGO_SETTINGS_MODULE="{{ project_name }}.settings.{{ env_name }}"
+daphne -b 0.0.0.0 -p 8001 {{ project_name }}.asgi:channel_layer
