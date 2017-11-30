@@ -48,7 +48,7 @@ for scheme in INSTALL_SCHEMES.values():
 
 setup(
     name='deployit',
-    version='16.5.13',
+    version='16.5.14',
     description="Iterativ GmbH DeployIt",
     author='Daniel Egger',
     author_email='daniel.egger@iterativ.ch',
@@ -57,9 +57,9 @@ setup(
     data_files=data_files,
     zip_safe=False,
     install_requires=[
-        'Fabric3==1.13.1.post1',
-        'Jinja2==2.8',
-        'python-dateutil==2.5.3',
-        'requests==2.18.1'
+        'Fabric3<2',
+        'Jinja2<3',
+        'python-dateutil<3',
+        'requests<3'
     ]
 )
