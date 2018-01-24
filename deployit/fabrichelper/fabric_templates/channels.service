@@ -1,0 +1,17 @@
+[Unit]
+Description=Channels Service
+After=network.target
+
+[Service]
+ExecStartPre=/bin/chmod +x /usr/bin/channels
+PermissionsStartOnly=true
+Type=forking
+User=www-data
+Group=www-data
+ExecStart=/usr/bin/channels {{num_processes}}
+Restart=always
+KillMode=mixed
+TimeoutStopSec=5
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,16 @@
+[Unit]
+Description=Daphne Service
+After=network.target
+
+[Service]
+ExecStartPre=/bin/chmod +x /usr/bin/daphne
+PermissionsStartOnly=true
+Type=simple
+User=www-data
+Group=www-data
+Restart=always
+ExecStart=/usr/bin/daphne
+
+
+[Install]
+WantedBy=multi-user.target
