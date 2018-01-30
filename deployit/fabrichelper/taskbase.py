@@ -7,10 +7,10 @@
 #
 # Created on Jul 02, 2012
 # @author: paweloque <paweloque@gmail.com>
+import requests
 import shutil
 import tempfile
 import time
-import requests
 from fabric.contrib.console import confirm
 from fabric.contrib.files import exists
 from fabric.contrib.project import rsync_project
@@ -126,7 +126,7 @@ class Deploy(BaseTask):
             revision_date = ''
             changelog = ''
 
-        message = ', '.join([datetime.datetime.now().strftime("%Y-%d-%y %H:%M:%S,%f"),
+        message = ', '.join([datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S,%f"),
                              username,
                              revision,
                              revision_date,
@@ -199,7 +199,7 @@ class Deploy(BaseTask):
                         template_dir=env.global_template_dir)
 
     @calc_duration
-    def run(self, no_input=False, migrate=False):
+    def run(self, migrate=False, restart=True):
 
         self.create_project_directories()
 
@@ -228,7 +228,8 @@ class Deploy(BaseTask):
         if migrate:
             Migrate().run()
 
-        self.restart_services()
+        if restart:
+            self.restart_services()
 
 
 class FlaskDeploy(Deploy):
